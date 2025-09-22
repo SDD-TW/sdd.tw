@@ -84,7 +84,7 @@ const Hero = () => {
             variants={itemVariants}
             className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl h-16"
           >
-            由水球軟體學院創建的研究組織，致力於推動 SDD（
+            由<span className="gradient-text font-semibold">水球軟體學院</span>創建的研究組織，致力於推動 SDD（
             <span className="text-blue-400 font-semibold">
               <TypewriterEffect
                 texts={[
