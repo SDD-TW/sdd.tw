@@ -7,7 +7,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-gray-900 pt-16 pb-6 overflow-hidden">
+    <footer className="relative bg-gray-800 pt-16 pb-6 overflow-hidden">
       {/* 背景效果 */}
       <div className="absolute inset-0 z-0">
         <div className="grid-bg opacity-20 absolute inset-0"></div>
