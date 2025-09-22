@@ -98,9 +98,9 @@ const ContactForm = () => {
 
           <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-blue-400">加入水球軟體學院</h3>
+              <h3 className="text-2xl font-bold text-blue-400">加入我們的研究</h3>
               <p className="text-gray-300">
-                成為我們社群的一員，一起探索 SDD 的奧秘，提升您的開發技能和效率。
+                我們是由水球軟體學院創建的研究組織。加入我們，一起探索 SDD 的奧秘，提升您的開發技能和效率。
               </p>
               <div className="space-y-4">
                 <div className="flex items-start">
@@ -111,7 +111,7 @@ const ContactForm = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold">電子郵件</h4>
-                    <p className="text-gray-400">contact@waterballsa.tw</p>
+                    <p className="text-gray-400">contact@sdd.tw</p>
                   </div>
                 </div>
                 <div className="flex items-start">

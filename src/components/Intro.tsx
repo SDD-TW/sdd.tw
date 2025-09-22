@@ -96,7 +96,7 @@ const Intro = () => {
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="heading gradient-text">什麼是 SDD？</h2>
             <p className="subheading">
-              SDD（Spec 驅動開發）是一種創新的開發方法論，通過明確的規格定義，實現全自動化的程式碼生成和測試
+              SDD（Spec 驅動開發）是一種創新的開發方法論。我們是由水球軟體學院創建的研究組織，致力於在台灣推廣此方法論，實現全自動化的程式碼生成和測試。
             </p>
           </motion.div>
 
@@ -104,10 +104,10 @@ const Intro = () => {
             <div className="space-y-6">
               <h3 className="text-2xl font-bold text-blue-400">為何選擇 SDD？</h3>
               <p className="text-gray-300">
-                SDD 將開發流程變得更加高效和可靠。透過明確的規格定義，開發人員可以專注於業務邏輯，而不是重複性的編碼工作。
+                SDD 將開發流程變得更加高效和可靠。開發人員可以專注於業務邏輯，而不是重複性的編碼工作。
               </p>
               <p className="text-gray-300">
-                我們的社群致力於推廣 SDD 方法論，幫助台灣的開發者掌握這項未來技術，提升開發效率和程式碼品質。
+                作為水球軟體學院旗下的研究組織，我們致力於推廣 SDD 方法論，幫助台灣的開發者掌握這項未來技術，提升開發效率和程式碼品質。
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start">

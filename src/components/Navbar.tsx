@@ -44,8 +44,9 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold gradient-text glow">水球軟體學院</span>
+            <Link href="/" className="flex items-center space-x-2">
+              <span className="text-xl font-bold gradient-text glow">台灣規格驅動開發</span>
+              <span className="hidden sm:inline-block text-xs text-gray-400 border-l border-gray-600 pl-2">by 水球軟體學院</span>
             </Link>
           </div>
 

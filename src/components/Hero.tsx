@@ -77,26 +77,26 @@ const Hero = () => {
             variants={itemVariants}
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text glow"
           >
-            水球軟體學院
+            台灣規格驅動開發
           </motion.h1>
 
           <motion.div
             variants={itemVariants}
             className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl h-16"
           >
-            專屬台灣推動 SDD（
+            由水球軟體學院創建的研究組織，致力於推動 SDD（
             <span className="text-blue-400 font-semibold">
               <TypewriterEffect
                 texts={[
                   "Spec 驅動開發",
                   "規格驅動開發",
                   "自動化程式生成",
-                  "未來開發方法論"
+                  "未來開發方法論",
                 ]}
                 typingSpeed={80}
               />
             </span>
-            ）的社群，透過遊戲化活動和評鑒機制，一起實現全自動化開發
+            ）在台灣的發展。
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 mb-16">

@@ -18,10 +18,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="inline-block mb-6">
-              <span className="text-2xl font-bold gradient-text">水球軟體學院</span>
+              <span className="text-2xl font-bold gradient-text">台灣規格驅動開發</span>
             </Link>
             <p className="text-gray-400 mb-6">
-              專屬台灣推動 SDD（Spec 驅動開發）的社群，一起實現全自動化開發的未來。
+              由水球軟體學院創建的研究組織，專注於推動 SDD（Spec 驅動開發）的未來。
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -132,7 +132,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 pt-6 mt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © {currentYear} 水球軟體學院. 保留所有權利.
+              © {currentYear} 台灣規格驅動開發. Created by 水球軟體學院.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
