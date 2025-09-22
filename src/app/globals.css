@@ -1,26 +1,95 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #3490dc;
+  --secondary: #38b2ac;
+  --accent: #9561e2;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+@layer components {
+  .container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+  
+  .btn {
+    @apply px-6 py-3 rounded-md font-medium transition-all duration-300 inline-flex items-center justify-center;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 border border-blue-600;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white;
+  }
+  
+  .section {
+    @apply py-16 md:py-24;
+  }
+  
+  .heading {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold mb-6;
+  }
+  
+  .subheading {
+    @apply text-xl md:text-2xl font-medium mb-8 text-gray-300;
+  }
+}
+
+/* 未來感特效的基本樣式 */
+.glow {
+  text-shadow: 0 0 10px rgba(52, 144, 220, 0.5),
+               0 0 20px rgba(52, 144, 220, 0.3),
+               0 0 30px rgba(52, 144, 220, 0.1);
+}
+
+.grid-bg {
+  background-image: 
+    linear-gradient(rgba(52, 144, 220, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 144, 220, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500;
+}
+
+/* 動畫效果 */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 5px rgba(52, 144, 220, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(52, 144, 220, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(52, 144, 220, 0.5); }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
 }
