@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
-import Intro from '@/components/Intro';
+import Methodology from '@/components/Methodology'; // Import the new component
 import ContactForm from '@/components/ContactForm';
 import Trust from '@/components/Trust';
 import Footer from '@/components/Footer';
@@ -22,7 +22,7 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <Intro />
+        <Methodology /> {/* Use the new component */}
         <Trust />
         <ContactForm />
       </main>
