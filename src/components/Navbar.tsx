@@ -26,6 +26,7 @@ const Navbar = () => {
   const navLinks = [
     { name: '首頁', href: '/' },
     { name: '方法論', href: '/#methodology' },
+    { name: '技術', href: '/#technology' }
   ];
 
   return (
@@ -61,7 +62,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <Link
-                href="#join"
+                href="/join"
                 className="btn btn-primary pulse-glow"
               >
                 加入社群
@@ -127,15 +128,17 @@ const Navbar = () => {
               key={link.name}
               href={link.href}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => {
+                setIsMobileMenuOpen(false);
+              }}
             >
               {link.name}
             </Link>
           ))}
           <Link
-            href="#join"
+            href="/join"
             className="block w-full text-center mt-4 btn btn-primary"
-            onClick={() => setIsMobileMenuOpen(false)}
+
           >
             加入社群
           </Link>

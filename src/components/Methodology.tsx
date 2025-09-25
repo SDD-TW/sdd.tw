@@ -207,11 +207,11 @@ const Methodology = () => {
                     <ul className="space-y-4 text-gray-300">
                       <li className="flex items-start">
                         <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>在產品開發生命週期中，透過《Spec by example 工作坊》讓 PM、QA、設計師、工程師等角色共同協作來制定各項 User Story 的「可執行規格」。</span>
+                        <span>在產品開發生命週期中，透過《Spec by example 工作坊》讓 PM、QA、設計師、工程師等角色共同協作來制定各項 User Story 的「DSL-Level可執行規格」。</span>
                       </li>
                       <li className="flex items-start">
                         <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>透過技術，直接走查 User Story 每一項 Example 是否符合全體共識及認知。</span>
+                        <span>透過技術，直接走查 User Story 每一項 Example 是否符合全體共識及認知，如果沒有，立即同步共識。</span>
                       </li>
                       <li className="flex items-start">
                         <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -219,7 +219,7 @@ const Methodology = () => {
                       </li>
                       <li className="flex items-start">
                         <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>願意花大量時間溝通和釐清共識，因為一但會議結束，剩下的透過 AI 就可以做到全自動化開發。</span>
+                        <span>願意花大量時間溝通和釐清共識，因為一但會議結束，剩下只要部署規格，透過 SDD.OS AI 技術 就可以做到全自動化開發。</span>
                       </li>
                     </ul>
                 </div>
@@ -242,9 +242,8 @@ const Methodology = () => {
                 </div>
              </div>
           </motion.div>
-
           {/* Section 4: SDD.OS Technology */}
-          <motion.div variants={itemVariants} className="text-center">
+          <motion.div variants={itemVariants} id="technology" className="text-center pt-24 md:pt-28">
             <h2 className="heading gradient-text">SDD.OS 的技術</h2>
             <p className="subheading max-w-4xl mx-auto">
               <a href="https://waterballsa.tw/" target="_blank" rel="noopener noreferrer" className="text-[#2ee9ff] font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>所推廣的技術原理，能在「功能性需求」上能做到 100% 正確全自動化開發，而我們認為這種<strong className="text-cyan-400">「高精度」</strong>的規格實踐，才是 SDD 的未來。
