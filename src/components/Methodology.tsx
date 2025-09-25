@@ -33,10 +33,22 @@ const Methodology = () => {
   };
 
   const myths = [
-    '以為只是「撰寫一堆文件」就叫做「規格驅動開發」',
-    '無法定義到底何謂「規格」，把 SDD 變得和 Prompt Engineering 沒兩樣',
-    '無法導入團隊，以為寫一堆 PRD、User Story 就叫 SDD，但其實根本沒有增加效率',
-    '總是寫一堆文件，甚至都讓 AI 產文件，卻無法增加開發的精度，燒一堆 AI Tokens 卻燒不出成效',
+    {
+      title: '誤解為「文件驅動」',
+      description: '以為只是「撰寫一堆文件」就叫做「規格驅動開發」，那為何不稱之為「文件驅動開發」就好？幹嘛又要發明一個新名詞 SDD？',
+    },
+    {
+      title: '規格無限制：對系統分析專業一知半解',
+      description: '對系統分析專業一知半解，無法分清楚業務規格和各種技術規格，把 SDD 變得和一般 Prompt/Context Engineering 沒兩樣。',
+    },
+    {
+      title: '團隊導入與衡量困難',
+      description: '難以導入團隊，以為寫一堆 PRD、User Story 就叫 SDD，但對於 AI 開發及 AI 與工程師的共識精度卻毫無計算標準。',
+    },
+    {
+      title: '缺乏工程文化上的信任',
+      description: '工程師不想寫文件，總是讓 AI 產文件，卻怠於判斷文件的精度。長久以往，大家對 SDD 半信半疑，燒一堆 AI Tokens 卻燒不出成效。',
+    },
   ];
 
   return (
@@ -47,7 +59,7 @@ const Methodology = () => {
         <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[80px]" />
       </div>
 
-      <div className="container mx-auto relative z-10">
+      <div  className="container mx-auto relative z-10">
         <motion.div
           ref={ref}
           variants={containerVariants}
@@ -60,36 +72,36 @@ const Methodology = () => {
             <div className="text-center mb-16">
                 <h2 className="heading gradient-text">什麼是 SDD？</h2>
                 <p className="subheading">
-                SDD（Spec 驅動開發）是一種創新的開發方法論。我們是由水球軟體學院創建的研究組織，致力於在台灣推廣此方法論，實現全自動化的程式碼生成和測試。
+                SDD（規格驅動開發 / Spec-Driven Development）是一種 Vibe Coding/ AI Coding 的實踐，希望能夠在 Vibe Coding 的浪潮中撥亂反正，強調以<strong className="text-cyan-400">「規格為核心」</strong>來驅動 AI 盡可能做到<strong className="text-cyan-400">「高精度」</strong>的開發。
                 </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div className="space-y-6">
-                  <h3 className="text-2xl font-bold text-blue-400">為何選擇 SDD？</h3>
+                  <h3 className="text-2xl font-bold text-blue-400">為何要實踐 SDD？</h3>
                   <p className="text-gray-300">
-                    SDD 將開發流程變得更加高效和可靠。開發人員可以專注於業務邏輯，而不是重複性的編碼工作。
+                    SDD 讓你能夠不再需要與 AI 無效率地一來一往地來回下 Prompt 修 Code，而是可以專注於業務邏輯，而不是重複性的 Prompt Engineering 工作。
                   </p>
                   <p className="text-gray-300">
-                    作為水球軟體學院旗下的研究組織，我們致力於推廣 SDD 方法論，幫助台灣的開發者掌握這項未來技術，提升開發效率和程式碼品質。
+                    我們致力於推廣 SDD 方法論，幫助台灣的開發者及企業快速掌握這項未來技術，提升開發效率和程式碼品質。
                   </p>
                   <ul className="space-y-3">
                     <li className="flex items-start">
                       <svg className="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                       </svg>
-                      <span>提高開發效率 80%</span>
+                      <span>關注點左移：全力寫好規格，功能便能開發到位 → 企業軟體產值百倍</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                       </svg>
-                      <span>減少 90% 的錯誤和 bug</span>
+                      <span>減少大量 Human Error → 減少 90% 的錯誤和 bug</span>
                     </li>
                     <li className="flex items-start">
                       <svg className="h-6 w-6 text-green-500 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                       </svg>
-                      <span>自動化測試和部署流程</span>
+                      <span>DevOps：自動化測試和部署流程</span>
                     </li>
                   </ul>
                 </div>
@@ -97,41 +109,49 @@ const Methodology = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg blur-md"></div>
                   <div className="relative bg-gray-900/80 p-6 rounded-lg border border-gray-800">
                     <pre className="text-sm overflow-x-auto">
-                      <code className="language-typescript">
-                        <span className="text-pink-400">interface</span>{" "}
-                        <span className="text-blue-400">User</span> {"{"}
+                      <code className="language-gherkin">
+                        <span className="text-pink-400">Feature:</span> 優惠券折扣計算
+                        <br />
+                        <br />
+                        <span className="text-pink-400">Scenario:</span> VIP 會員套用多張優惠券
                         <br />
                         {"  "}
-                        <span className="text-gray-400">id:</span>{" "}
-                        <span className="text-yellow-400">string</span>;
+                        <span className="text-pink-400">Given</span>{" "}
+                        一位 VIP 會員的購物車內有以下商品:
+                        <br />
+                        <span className="text-gray-400">
+                          {"    "}| 商品 | 價格 | 數量 |
+                        </span>
+                        <br />
+                        <span className="text-gray-400">
+                          {"    "}| 筆記型電腦 | 30000 | 1 |
+                        </span>
+                        <br />
+                        <span className="text-gray-400">
+                          {"    "}| 滑鼠 | 1500 | 1 |
+                        </span>
                         <br />
                         {"  "}
-                        <span className="text-gray-400">name:</span>{" "}
-                        <span className="text-yellow-400">string</span>;
+                        <span className="text-pink-400">And</span>{" "}
+                        該使用者擁有一張{" "}
+                        <span className="text-green-400">"10% 折扣"</span>{" "}
+                        的百分比優惠券
                         <br />
                         {"  "}
-                        <span className="text-gray-400">role:</span>{" "}
-                        <span className="text-yellow-400">UserRole</span>;
-                        <br />
-                        {"}"}
-                        <br />
-                        <br />
-                        <span className="text-pink-400">enum</span>{" "}
-                        <span className="text-blue-400">UserRole</span> {"{"}
+                        <span className="text-pink-400">And</span>{" "}
+                        該使用者擁有一張{" "}
+                        <span className="text-green-400">"折抵 500 元"</span>{" "}
+                        的固定金額優惠券
                         <br />
                         {"  "}
-                        <span className="text-gray-400">ADMIN</span> ={" "}
-                        <span className="text-green-400">'admin'</span>,
+                        <span className="text-pink-400">When</span>{" "}
+                        使用者在訂單上套用這些優惠券
                         <br />
                         {"  "}
-                        <span className="text-gray-400">MEMBER</span> ={" "}
-                        <span className="text-green-400">'member'</span>,
+                        <span className="text-pink-400">Then</span>{" "}
+                        最終總金額應為{" "}
+                        <span className="text-yellow-400">27850</span>
                         <br />
-                        {"  "}
-                        <span className="text-gray-400">GUEST</span> ={" "}
-                        <span className="text-green-400">'guest'</span>
-                        <br />
-                        {"}"}
                       </code>
                     </pre>
                   </div>
@@ -141,18 +161,24 @@ const Methodology = () => {
 
           {/* Section 1: Myths about SDD */}
           <motion.div variants={itemVariants} className="text-center mb-24">
-            <h2 className="heading gradient-text">大多數人對於 SDD 的迷思</h2>
+            <h2 className="heading gradient-text">可是，SDD 並不單純，你很有可能犯下以下錯誤</h2>
             <p className="subheading">
-              如果無法掌握核心精神，導入 SDD 往往會落入以下陷阱：
+              如果無法掌握核心精神，導入 SDD 往往會落入以下陷阱，導致效率不增反減：
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-5xl mx-auto">
               {myths.map((myth, index) => (
                 <motion.div
                   key={index}
                   variants={itemVariants}
-                  className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-lg border border-gray-800 text-left"
+                  className="bg-red-900/20 backdrop-blur-sm p-6 rounded-lg border border-red-800/50 text-left transition-all duration-300 hover:border-red-600/80 hover:shadow-lg hover:shadow-red-500/20 hover:scale-105"
                 >
-                  <p className="text-gray-300">{myth}</p>
+                  <div className="flex items-start">
+                    <div className="text-4xl font-black text-red-500/80 mr-4 font-mono">{index + 1}.</div>
+                    <div>
+                      <h3 className="text-xl font-bold text-red-400 mb-2">{myth.title}</h3>
+                      <p className="text-gray-300 text-base">{myth.description}</p>
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -161,7 +187,7 @@ const Methodology = () => {
           {/* Section 2: The Spectrum of Specifications */}
           <motion.div variants={itemVariants} className="mb-24">
             <div className="text-center mb-12">
-                <h2 className="heading gradient-text">規格的光譜</h2>
+                <h2 className="heading gradient-text">方法論的根本：你必須了解「規格的光譜」</h2>
                 <p className="subheading">
                 要實踐 SDD，你必須先掌握「規格的光譜」。規格是有光譜的，你必須定義清楚「光譜兩端」的規格分別有什麼性質。
                 </p>
@@ -173,20 +199,46 @@ const Methodology = () => {
           <motion.div variants={itemVariants} className="text-center mb-24">
             <h2 className="heading gradient-text">SDD.TW 致力於構建軟體開發的未來</h2>
              <p className="subheading">
-               SDD.TW 相信，未來 Vibe Coding / SDD 的趨勢，一定是規格光譜中間那一區塊的方法論及技術實踐。
+               SDD.TW 相信，未來 Vibe Coding / SDD 的趨勢，一定是「DSL-Level 可執行規格」＋「ISA-Level 可執行規格」的組合實踐和技術。
              </p>
-             <div className="mt-12 text-left max-w-4xl mx-auto space-y-8">
+             <div className="mt-12 text-left max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg border border-gray-800">
-                    <h3 className="text-2xl font-bold text-blue-400 mb-4">敏捷開發流程整合</h3>
-                    <p className="text-gray-300">
-                    在敏捷開發的週期中，我們透過 《Spec by example 工作坊》，讓跨職能角色 (PM, BA, QA, 設計師, 工程師,...) 協作、溝通，一同把每個 Sprint 中每個 User Story 的驗收標準寫成「可執行規格」，從中收攏業務專用的 DSL（光譜中間）。
-                    </p>
+                    <h3 className="text-2xl font-bold text-blue-400 mb-4">企業軟體產值百倍：全體角色 SDD 協作</h3>
+                    <ul className="space-y-4 text-gray-300">
+                      <li className="flex items-start">
+                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>在產品開發生命週期中，透過《Spec by example 工作坊》讓 PM、QA、設計師、工程師等角色共同協作來制定各項 User Story 的「可執行規格」。</span>
+                      </li>
+                      <li className="flex items-start">
+                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>透過技術，直接走查 User Story 每一項 Example 是否符合全體共識及認知。</span>
+                      </li>
+                      <li className="flex items-start">
+                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>同時，從中收攏業務專用的 DSL，統一團隊在每一份用詞定義及測試意圖的理解，同時凝聚企業及產品願景。</span>
+                      </li>
+                      <li className="flex items-start">
+                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>願意花大量時間溝通和釐清共識，因為一但會議結束，剩下的透過 AI 就可以做到全自動化開發。</span>
+                      </li>
+                    </ul>
                 </div>
                 <div className="bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg border border-gray-800">
-                    <h3 className="text-2xl font-bold text-blue-400 mb-4">高階規格轉譯</h3>
-                    <p className="text-gray-300">
-                    接著，工程師負責把高階的可執行規格，透過技術直接翻譯成低階的 ISA-Level 的可執行規格，讓規格每一句 DSL 在 Tech Stack 上的測試實踐被明確定義，產出 100% 正確的測試程式。
-                    </p>
+                    <h3 className="text-2xl font-bold text-blue-400 mb-4">工程師不會被取代，而是轉型</h3>
+                    <ul className="space-y-4 text-gray-300">
+                      <li className="flex items-start">
+                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>工程師在會議中，透過技術，把每一句 DSL-Level 的 Spec 立即讓全體角色看見其實踐上的 AI 成本和技術意義。</span>
+                      </li>
+                      <li className="flex items-start">
+                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>工程師仍然是骨幹，會後持續維護將高階的「DSL-Level 可執行規格」轉譯成「ISA-Level 可執行規格」的 DSL 定義文件。</span>
+                      </li>
+                      <li className="flex items-start">
+                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>工程師負責把控 AI 全自動化開發的生命週期，確保測試程式碼的通過率持續增加，最終產出 100% 正確的測試程式，實現高精度開發。</span>
+                      </li>
+                    </ul>
                 </div>
              </div>
           </motion.div>
@@ -195,10 +247,20 @@ const Methodology = () => {
           <motion.div variants={itemVariants} className="text-center">
             <h2 className="heading gradient-text">SDD.OS 的技術</h2>
             <p className="subheading max-w-4xl mx-auto">
-              我們的技術能做到 100% 正確全自動化的開發，而我們認為這種「高精度」的規格實踐，才是 SDD 的未來。請看看我們的技術實踐介紹，目前這項技術只開源給研究組織的社群成員（任何人都可以加入），直到技術成熟後，我們才會開放原始碼給所有的企業/個人無償商業使用。
+              <a href="https://waterballsa.tw/" target="_blank" rel="noopener noreferrer" className="text-yellow-400 font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>所推廣的技術原理，能在「功能性需求」上能做到 100% 正確全自動化開發，而我們認為這種<strong className="text-cyan-400">「高精度」</strong>的規格實踐，才是 SDD 的未來。
             </p>
-            <div className="mt-12 aspect-video max-w-4xl mx-auto bg-gray-900/50 rounded-lg border border-gray-800 flex items-center justify-center">
-                <p className="text-gray-500">Youtube 影片即將上線</p>
+            <p className="mt-4 max-w-3xl mx-auto text-gray-400">
+              請看看我們的技術實踐介紹，目前這項技術只開源給研究組織的社群成員（任何人都可以加入），直到技術成熟後，我們才會開放原始碼給所有的企業/個人無償商業使用。
+            </p>
+            <div className="mt-12 aspect-video max-w-4xl mx-auto rounded-lg overflow-hidden border border-gray-800 shadow-2xl shadow-blue-500/20">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/y3dUVaMTJ4g?si=BEqPWhQng8GdcNlQ"
+                title="SDD.OS 初版技術介紹"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
             </div>
           </motion.div>
 

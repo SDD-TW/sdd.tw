@@ -67,43 +67,37 @@ const Hero = () => {
           initial="hidden"
           animate={inView ? 'visible' : 'hidden'}
         >
-          <motion.div variants={itemVariants} className="mb-4">
-            <span className="inline-block px-4 py-1 rounded-full bg-blue-900/30 text-blue-400 border border-blue-700/50 text-sm font-medium mb-6">
-              台灣首個 SDD 專業社群
-            </span>
-          </motion.div>
 
           <motion.h1
             variants={itemVariants}
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 gradient-text glow"
           >
-            台灣規格驅動開發
+            臺灣規格驅動開發
           </motion.h1>
 
           <motion.div
             variants={itemVariants}
-            className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl h-16"
+            className="text-xl md:text-2xl text-gray-300 mb-16 max-w-3xl h-16"
           >
-            由<span className="gradient-text font-semibold">水球軟體學院</span>創建的研究組織，致力於推動 SDD（
+            由<span className="gradient-text font-semibold">水球軟體學院</span>創建的研究組織，<br/>致力於在臺推動 SDD（
             <span className="text-blue-400 font-semibold">
               <TypewriterEffect
                 texts={[
-                  "Spec 驅動開發",
-                  "規格驅動開發",
-                  "自動化程式生成",
-                  "未來開發方法論",
+                  "規格驅動開發：方法論",
+                  "100% 全自動化開發準開源技術",
+                  "企業 AI/SDD 轉型顧問培訓共享經濟",
                 ]}
                 typingSpeed={80}
               />
             </span>
-            ）在台灣的發展。
+            ）來擴大臺灣軟體公司經濟規模百倍。
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 mb-16">
             <Link href="#join" className="btn btn-primary text-lg pulse-glow">
               加入社群
             </Link>
-            <Link href="#about" className="btn btn-secondary text-lg">
+            <Link href="#methodology" className="btn btn-secondary text-lg">
               了解更多
             </Link>
           </motion.div>
@@ -128,7 +122,7 @@ const Hero = () => {
                 <br />
                 <span className="text-green-400">  Scenario:</span> 自動化程式碼生成
                 <br />
-                <span className="text-purple-400">    Given</span> 我有一個明確的規格文件
+                <span className="text-purple-400">    Given</span> 有一個明確的規格文件
                 <br />
                 <span className="text-purple-400">    When</span> 我使用 SDD 方法論
                 <br />

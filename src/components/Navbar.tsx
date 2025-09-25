@@ -24,9 +24,8 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: '關於我們', href: '/#about' },
+    { name: '首頁', href: '/' },
     { name: '方法論', href: '/#methodology' },
-    { name: '加入社群', href: '/join' },
   ];
 
   return (
@@ -43,8 +42,8 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center space-x-2">
-              <img src="/logo.png" alt="台灣規格驅動開發" className="w-10 h-10" />
-              <span className="text-xl font-bold gradient-text glow">台灣規格驅動開發</span>
+              <img src="/logo.png" alt="臺灣規格驅動開發" className="w-10 h-10" />
+              <span className="text-xl font-bold gradient-text glow">臺灣規格驅動開發</span>
               <span className="hidden sm:inline-block text-xs text-gray-400 border-l border-gray-600 pl-2">by 水球軟體學院</span>
             </Link>
           </div>
