@@ -24,11 +24,9 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: '首頁', href: '/' },
-    { name: '關於 SDD', href: '#about' },
-    { name: '社群活動', href: '#activities' },
-    { name: '評鑒機制', href: '#evaluation' },
-    { name: '聯絡我們', href: '#contact' },
+    { name: '關於我們', href: '/#about' },
+    { name: '方法論', href: '/#methodology' },
+    { name: '加入社群', href: '/join' },
   ];
 
   return (

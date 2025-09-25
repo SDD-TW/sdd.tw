@@ -42,7 +42,7 @@ const ScrollAnimation = ({
   }, [controls, inView, once]);
 
   // 不同類型的動畫變體
-  const variants = {
+  const variants: any = {
     fadeIn: {
       hidden: { opacity: 0 },
       visible: {
