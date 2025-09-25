@@ -25,7 +25,7 @@ const Hero = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: any = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
@@ -37,7 +37,7 @@ const Hero = () => {
     },
   };
 
-  const codeBlockVariants = {
+  const codeBlockVariants: any = {
     hidden: { opacity: 0, scale: 0.95 },
     visible: {
       opacity: 1,
