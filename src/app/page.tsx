@@ -23,8 +23,8 @@ export default function Home() {
       <main>
         <Hero />
         <Methodology /> {/* Use the new component */}
-        <Trust />
-        <ContactForm />
+        {/* <Trust /> */}
+        {/* <ContactForm /> */}
       </main>
       <Footer />
     </div>
