@@ -247,7 +247,7 @@ const Methodology = () => {
           <motion.div variants={itemVariants} className="text-center">
             <h2 className="heading gradient-text">SDD.OS 的技術</h2>
             <p className="subheading max-w-4xl mx-auto">
-              <a href="https://waterballsa.tw/" target="_blank" rel="noopener noreferrer" className="text-yellow-400 font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>所推廣的技術原理，能在「功能性需求」上能做到 100% 正確全自動化開發，而我們認為這種<strong className="text-cyan-400">「高精度」</strong>的規格實踐，才是 SDD 的未來。
+              <a href="https://waterballsa.tw/" target="_blank" rel="noopener noreferrer" className="text-[#2ee9ff] font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>所推廣的技術原理，能在「功能性需求」上能做到 100% 正確全自動化開發，而我們認為這種<strong className="text-cyan-400">「高精度」</strong>的規格實踐，才是 SDD 的未來。
             </p>
             <p className="mt-4 max-w-3xl mx-auto text-gray-400">
               請看看我們的技術實踐介紹，目前這項技術只開源給研究組織的社群成員（任何人都可以加入），直到技術成熟後，我們才會開放原始碼給所有的企業/個人無償商業使用。
