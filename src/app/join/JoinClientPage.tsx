@@ -39,7 +39,7 @@ const JoinClientPage: NextPage = () => {
               <iframe
                 src="https://docs.google.com/forms/d/e/1FAIpQLSewrtus0F-AgE0KL5fHSulYl0FAnoOm6wtg-sPIMg2smKxZsA/viewform?embedded=true" 
                 loading="lazy"
-                title="AI 軟工百倍研究組織"
+                title="加入臺灣規格驅動開發研究組織"
               ></iframe>
             </div>
           </div>

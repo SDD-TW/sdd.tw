@@ -28,7 +28,7 @@ const spectrumPoints = [
   },
   {
     id: 'executable',
-    name: '可執行規格',
+    name: 'DSL-Level 可執行規格',
     description: [
         { text: '由 BDD 定義，為測試程式碼的抽象，隱藏技術細節只保留關鍵語義，門檻低，容易理解。', type: 'advantage' },
         { text: '要求句型一致，容易歸納出 DSL，且攜帶資料舉例說明，能夠高度同步人和 AI 的認知，擁有最良好的跨職能協作性質，不同角色都能釐清業務共識。', type: 'advantage' },

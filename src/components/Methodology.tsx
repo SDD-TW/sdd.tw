@@ -201,46 +201,105 @@ const Methodology = () => {
              <p className="subheading">
                SDD.TW 相信，未來 Vibe Coding / SDD 的趨勢，一定是「DSL-Level 可執行規格」＋「ISA-Level 可執行規格」的組合實踐和技術。
              </p>
-             <div className="mt-12 text-left max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg border border-gray-800">
-                    <h3 className="text-2xl font-bold text-blue-400 mb-4">企業軟體產值百倍：全體角色 SDD 協作</h3>
-                    <ul className="space-y-4 text-gray-300">
-                      <li className="flex items-start">
-                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>在產品開發生命週期中，透過《Spec by example 工作坊》讓 PM、QA、設計師、工程師等角色共同協作來制定各項 User Story 的「DSL-Level可執行規格」。</span>
-                      </li>
-                      <li className="flex items-start">
-                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>透過技術，直接走查 User Story 每一項 Example 是否符合全體共識及認知，如果沒有，立即同步共識。</span>
-                      </li>
-                      <li className="flex items-start">
-                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>同時，從中收攏業務專用的 DSL，統一團隊在每一份用詞定義及測試意圖的理解，同時凝聚企業及產品願景。</span>
-                      </li>
-                      <li className="flex items-start">
-                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>願意花大量時間溝通和釐清共識，因為一但會議結束，剩下只要部署規格，透過 SDD.OS AI 技術 就可以做到全自動化開發。</span>
-                      </li>
-                    </ul>
+            <p className="mt-8 text-2xl font-semibold text-cyan-300 animate-pulse" style={{ textShadow: '0 0 15px rgba(46, 233, 255, 0.6)' }}>
+              想像一下，未來產品開發的流程長這樣
+            </p>
+
+            <div className="mt-12 w-full max-w-7xl mx-auto">
+              <div className="flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-6">
+                
+                {/* Step 1: Discovery */}
+                <div className="flex flex-col text-left w-full lg:w-1/3">
+                  <div className="text-center mb-4">
+                    <span className="text-2xl font-bold gradient-text">Discovery</span>
+                  </div>
+                  <div className="bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg border border-gray-800 h-full">
+                      <h3 className="text-xl font-bold text-cyan-400 mb-4">產品開發產值百倍：全員 SDD 協作</h3>
+                      <ul className="space-y-4 text-gray-300">
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>在產品開發生命週期中，透過《Spec by example 工作坊》讓 PM、QA、設計師、工程師等角色共同協作來制定各項 User Story 的「DSL-Level可執行規格」。</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>透過技術，直接走查 User Story 每一項 Example 是否符合全體共識及認知，如果沒有，立即同步共識。</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>同時，從中收攏業務專用的 DSL，統一團隊在每一份用詞定義及測試意圖的理解，同時凝聚企業及產品願景。</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>願意花大量時間溝通和釐清共識，因為一但會議結束，剩下只要部署規格，透過 SDD.OS AI 技術 就可以做到全自動化開發。</span>
+                        </li>
+                      </ul>
+                  </div>
                 </div>
-                <div className="bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg border border-gray-800">
-                    <h3 className="text-2xl font-bold text-blue-400 mb-4">工程師不會被取代，而是轉型</h3>
-                    <ul className="space-y-4 text-gray-300">
-                      <li className="flex items-start">
-                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>工程師在會議中，透過技術，把每一句 DSL-Level 的 Spec 立即讓全體角色看見其實踐上的 AI 成本和技術意義。</span>
-                      </li>
-                      <li className="flex items-start">
-                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>工程師仍然是骨幹，會後持續維護將高階的「DSL-Level 可執行規格」轉譯成「ISA-Level 可執行規格」的 DSL 定義文件。</span>
-                      </li>
-                      <li className="flex items-start">
-                        <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span>工程師負責把控 AI 全自動化開發的生命週期，確保測試程式碼的通過率持續增加，最終產出 100% 正確的測試程式，實現高精度開發。</span>
-                      </li>
-                    </ul>
+                
+                {/* Arrow */}
+                <div className="self-center transform rotate-90 lg:rotate-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-cyan-300 animate-pulse [filter:drop-shadow(0_0_6px_#67e8f9)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
                 </div>
-             </div>
+
+                {/* Step 2: Formulation */}
+                <div className="flex flex-col text-left w-full lg:w-1/3">
+                  <div className="text-center mb-4">
+                    <span className="text-2xl font-bold gradient-text">Formulation</span>
+                  </div>
+                  <div className="bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg border border-gray-800 h-full">
+                      <h3 className="text-xl font-bold text-cyan-400 mb-4">工程師不會被取代，而是轉型</h3>
+                      <ul className="space-y-4 text-gray-300">
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>工程師在會議中，透過 SDD.OS 技術，把每一句 DSL-Level 的 Spec 翻譯成「技術實現」，立即讓全體角色看見其實踐上的 AI 成本和技術意義。</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>會議後，工程師仍是骨幹，透過「DSL 定義語言」將會後產出的「DSL-Level 可執行規格」瞬間直譯成可被技術實現的「ISA-Level 可執行規格」。</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>SDD.OS 提供 dry-run 模式，協助工程師分析開發成本 (e.g., Tokens)，讓工程師持續優化 ISA（指令集架構）。</span>
+                        </li>
+                      </ul>
+                  </div>
+                </div>
+
+                {/* Arrow */}
+                <div className="self-center transform rotate-90 lg:rotate-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-cyan-300 animate-pulse [filter:drop-shadow(0_0_6px_#67e8f9)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                </div>
+
+                {/* Step 3: Automation */}
+                <div className="flex flex-col text-left w-full lg:w-1/3">
+                  <div className="text-center mb-4">
+                    <span className="text-2xl font-bold gradient-text">Automation</span>
+                  </div>
+                  <div className="bg-gray-900/50 backdrop-blur-sm p-8 rounded-lg border border-gray-800 h-full">
+                      <h3 className="text-xl font-bold text-cyan-400 mb-4">規格寫好，交給 SDD.OS AI</h3>
+                      <ul className="space-y-4 text-gray-300">
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>SDD.OS AI 會根據規格，產生測試意圖 100% 正確的測試程式。</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>測試的程式架構遵循「會尖叫的架構」原則（來自 Clean Architecutre)，實現超高測試程式碼的拓展性。</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>既然測試 100% 意圖正確，AI 會持續開發直到通過所有測試，因而實作 100% 功能正確的程式。</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="h-5 w-5 text-cyan-400 mr-3 mt-1 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <span>在測試保護下，工程師可輕鬆指導 AI 持續重構架構，重構後可持續回歸測試。</span>
+                        </li>
+                      </ul>
+                  </div>
+                </div>
+
+              </div>
+            </div>
           </motion.div>
           {/* Section 4: SDD.OS Technology */}
           <motion.div variants={itemVariants} id="technology" className="text-center pt-24 md:pt-28">

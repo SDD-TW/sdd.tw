@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "SDD.tw | 臺灣規格驅動開發 | 水球軟體學院研究組織",
+    title: "SDD.tw | 臺灣規格驅動開發 | 水球軟體學院",
     description: "由水球軟體學院創建的研究組織：臺灣規格驅動開發，專注於推動 SDD（規格驅動開發）。",
     url: "https://sdd.tw",
     siteName: "臺灣規格驅動開發",
