@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { useInView } from 'react-intersection-observer';
@@ -91,13 +91,14 @@ Then 存在一訂單, with table:
 const SpecificationSpectrum = () => {
   const [selectedId, setSelectedId] = useState(spectrumPoints[1].id);
   const [isHovering, setIsHovering] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const { ref, inView } = useInView({
     threshold: 0.2,
     triggerOnce: false,
   });
 
   useEffect(() => {
-    if (isHovering || !inView) {
+    if (isHovering || !inView || isDragging) {
       return;
     }
 
@@ -108,10 +109,30 @@ const SpecificationSpectrum = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [selectedId, isHovering, inView]);
+  }, [selectedId, isHovering, inView, isDragging]);
 
   const handlePointClick = (id: string) => {
     setSelectedId(id);
+  };
+
+  const handleDragEnd = (event: any, info: PanInfo) => {
+    setIsDragging(false);
+    const threshold = 50; // 滑動閾值
+    const currentIndex = spectrumPoints.findIndex(p => p.id === selectedId);
+    
+    if (info.offset.x > threshold) {
+      // 向右滑動，切換到前一個（支援循環）
+      const prevIndex = currentIndex > 0 ? currentIndex - 1 : spectrumPoints.length - 1;
+      setSelectedId(spectrumPoints[prevIndex].id);
+    } else if (info.offset.x < -threshold) {
+      // 向左滑動，切換到下一個（支援循環）
+      const nextIndex = currentIndex < spectrumPoints.length - 1 ? currentIndex + 1 : 0;
+      setSelectedId(spectrumPoints[nextIndex].id);
+    }
+  };
+
+  const handleDragStart = () => {
+    setIsDragging(true);
   };
 
   const selectedPoint = spectrumPoints.find((p) => p.id === selectedId);
@@ -136,14 +157,14 @@ const SpecificationSpectrum = () => {
               >
                  <div className="w-3 h-3 bg-gray-900 rounded-full"></div>
               </button>
-              <span className={`mt-4 text-sm md:text-base transition-colors ${selectedId === point.id ? 'text-blue-400 font-semibold' : 'text-gray-400'}`}>
+              <span className={`mt-4 text-sm md:text-base transition-colors ${selectedId === point.id ? 'text-blue-400 font-semibold' : 'text-gray-400'} ${point.name.length > 8 ? 'text-xs' : ''}`}>
                 {point.name}
               </span>
             </div>
           ))}
         </div>
       </div>
-
+      
       <AnimatePresence mode="wait">
         <motion.div
           key={selectedId}
@@ -152,6 +173,14 @@ const SpecificationSpectrum = () => {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start"
+          // 添加手機版滑動功能
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.2}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          whileDrag={{ scale: 0.98 }}
+          style={{ touchAction: 'pan-y' }} // 允許垂直滾動，但水平滑動由拖拽處理
         >
             <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-lg border border-gray-800 h-full">
                 <h3 className="text-xl font-bold text-blue-400 mb-4">{selectedPoint?.name}</h3>
