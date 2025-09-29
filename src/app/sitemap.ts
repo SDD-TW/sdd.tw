@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://waterballsa.tw';
+  const baseUrl = 'https://sdd.tw'; // 修正為實際的網域
   
   return [
     {
@@ -11,28 +11,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/about`,
+      url: `${baseUrl}/join`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/activities`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/evaluation`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
     },
   ];
 }
