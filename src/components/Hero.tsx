@@ -51,7 +51,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="relative min-h-screen grid-bg overflow-hidden pt-16">
+    <div className="relative min-h-screen xl:min-h-[80vh] 2xl:min-h-[70vh] grid-bg overflow-hidden pt-16">
       {/* 背景效果 */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-blue-900/20 to-transparent" />
@@ -59,7 +59,7 @@ const Hero = () => {
         <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] bg-purple-600/20 rounded-full blur-[80px]" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-20 md:pt-32">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-20 md:pt-32 xl:pt-24 2xl:pt-16">
         <motion.div
           ref={ref}
           className="flex flex-col items-center text-center"
