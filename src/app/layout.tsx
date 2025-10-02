@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/logo.png",
+        url: "https://sdd.tw/logo.png",
         width: 1200,
         height: 630,
         alt: "臺灣規格驅動開發",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SDD.tw | 臺灣規格驅動開發",
     description: "專注於推動 SDD（規格驅動開發），實現全自動化開發。",
-    images: ["/logo.png"],
+    images: ["https://sdd.tw/logo.png"],
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
