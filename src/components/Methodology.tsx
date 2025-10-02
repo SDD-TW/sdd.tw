@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import SpecificationSpectrum from './SpecificationSpectrum'; // This will be created next
+import ScrollAnimation from './ScrollAnimation';
 
 const Methodology = () => {
   const [ref, inView] = useInView({
@@ -161,52 +162,57 @@ const Methodology = () => {
           </motion.div>
 
           {/* Section 1: Myths about SDD */}
-          <motion.div variants={itemVariants} className="text-center mb-24">
-            <h2 className="heading gradient-text">可是，SDD 並不單純，你很有可能犯下以下錯誤</h2>
-            <p className="subheading">
-              如果無法掌握核心精神，導入 SDD 往往會落入以下陷阱，導致效率不增反減：
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-5xl mx-auto">
-              {myths.map((myth, index) => (
-                <motion.div
-                  key={index}
-                  variants={itemVariants}
-                  className="bg-red-900/20 backdrop-blur-sm p-6 rounded-lg border border-red-800/50 text-left transition-all duration-300 hover:border-red-600/80 hover:shadow-lg hover:shadow-red-500/20 hover:scale-105"
-                >
-                  <div className="flex items-start">
-                    <div className="text-4xl font-black text-red-500/80 mr-4 font-mono">{index + 1}.</div>
-                    <div>
-                      <h3 className="text-xl font-bold text-red-400 mb-2">{myth.title}</h3>
-                      <p className="text-gray-300 text-base">{myth.description}</p>
+          <ScrollAnimation type="fadeInUp" delay={0} once={false}>
+            <motion.div variants={itemVariants} className="text-center mb-24">
+              <h2 className="heading gradient-text">可是，SDD 並不單純，你很有可能犯下以下錯誤</h2>
+              <p className="subheading">
+                如果無法掌握核心精神，導入 SDD 往往會落入以下陷阱，導致效率不增反減：
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-5xl mx-auto">
+                {myths.map((myth, index) => (
+                  <motion.div
+                    key={index}
+                    variants={itemVariants}
+                    className="bg-red-900/20 backdrop-blur-sm p-6 rounded-lg border border-red-800/50 text-left transition-all duration-300 hover:border-red-600/80 hover:shadow-lg hover:shadow-red-500/20 hover:scale-105"
+                  >
+                    <div className="flex items-start">
+                      <div className="text-4xl font-black text-red-500/80 mr-4 font-mono">{index + 1}.</div>
+                      <div>
+                        <h3 className="text-xl font-bold text-red-400 mb-2">{myth.title}</h3>
+                        <p className="text-gray-300 text-base">{myth.description}</p>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </ScrollAnimation>
 
           {/* Section 2: The Spectrum of Specifications */}
-          <motion.div variants={itemVariants} className="mb-24">
-            <div className="text-center mb-12">
-                <h2 className="heading gradient-text">方法論的根本：你必須了解「規格的光譜」</h2>
-                <p className="subheading">
-                要實踐 SDD，你必須先掌握「規格的光譜」。規格是有光譜的，你必須定義清楚「光譜兩端」的規格分別有什麼性質。
-                </p>
-            </div>
-            <SpecificationSpectrum />
-          </motion.div>
+          <ScrollAnimation type="fadeInUp" delay={0} once={false}>
+            <motion.div variants={itemVariants} className="mb-24">
+              <div className="text-center mb-12">
+                  <h2 className="heading gradient-text">方法論的根本：你必須了解「規格的光譜」</h2>
+                  <p className="subheading">
+                  要實踐 SDD，你必須先掌握「規格的光譜」。規格是有光譜的，你必須定義清楚「光譜兩端」的規格分別有什麼性質。
+                  </p>
+              </div>
+              <SpecificationSpectrum />
+            </motion.div>
+          </ScrollAnimation>
           
           {/* Section 3: The Future of SDD.TW */}
-          <motion.div variants={itemVariants} className="text-center mb-24">
-            <h2 className="heading gradient-text">SDD.TW 致力於構建軟體開發的未來</h2>
-             <p className="subheading">
-               SDD.TW 相信，未來 Vibe Coding / SDD 的趨勢，一定是「DSL-Level 可執行規格」＋「ISA-Level 可執行規格」的組合實踐和技術。
-             </p>
-            <p className="mt-8 text-2xl font-semibold text-cyan-300 animate-pulse" style={{ textShadow: '0 0 15px rgba(46, 233, 255, 0.6)' }}>
-              想像一下，未來產品開發的流程長這樣
-            </p>
+          <ScrollAnimation type="fadeInUp" delay={0} once={false}>
+            <motion.div variants={itemVariants} className="text-center mb-24">
+              <h2 className="heading gradient-text">SDD.TW 致力於構建軟體開發的未來</h2>
+              <p className="subheading">
+                SDD.TW 相信，未來 Vibe Coding / SDD 的趨勢，一定是「DSL-Level 可執行規格」＋「ISA-Level 可執行規格」的組合實踐和技術。
+              </p>
+              <p className="mt-8 text-2xl font-semibold text-cyan-300 animate-pulse" style={{ textShadow: '0 0 15px rgba(46, 233, 255, 0.6)' }}>
+                想像一下，未來產品開發的流程長這樣
+              </p>
 
-            <div className="mt-12 w-full max-w-7xl mx-auto">
+              <div className="mt-12 w-full max-w-7xl mx-auto">
               <div className="flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-6">
                 
                 {/* Step 1: Discovery */}
@@ -300,10 +306,13 @@ const Methodology = () => {
                 </div>
 
               </div>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </ScrollAnimation>
+          
           {/* Section 4: SDD.OS Technology */}
-          <motion.div variants={itemVariants} id="technology" className="text-center pt-24 md:pt-28">
+          <ScrollAnimation type="fadeInUp" delay={0} once={false}>
+            <motion.div variants={itemVariants} id="technology" className="text-center pt-24 md:pt-28">
             <h2 className="heading gradient-text">SDD.OS 的技術</h2>
             <p className="subheading max-w-4xl mx-auto">
               <a href="https://waterballsa.tw/" target="_blank" rel="noopener noreferrer" className="text-[#2ee9ff] font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>所推廣的技術原理，能在「功能性需求」上能做到 100% 正確全自動化開發，而我們認為這種<strong className="text-cyan-400">「高精度」</strong>的規格實踐，才是 SDD 的未來。
@@ -321,7 +330,8 @@ const Methodology = () => {
                 allowFullScreen
               ></iframe>
             </div>
-          </motion.div>
+            </motion.div>
+          </ScrollAnimation>
 
         </motion.div>
       </div>
