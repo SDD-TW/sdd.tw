@@ -5,8 +5,10 @@ import { useInView } from 'react-intersection-observer';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
+// TypewriterEffect 使用動態導入並添加 loading 狀態
 const TypewriterEffect = dynamic(() => import('@/components/TypewriterEffect'), {
   ssr: false,
+  loading: () => <span className="text-blue-400">規格驅動開發：方法論</span>,
 });
 
 const Hero = () => {
@@ -94,7 +96,7 @@ const Hero = () => {
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 mb-16">
-            <Link href="/join" className="btn btn-primary text-lg pulse-glow">
+            <Link href="https://waterballs.tw/sdd_dc_onboard" className="btn btn-primary text-lg pulse-glow">
               加入社群
             </Link>
             <Link href="#methodology" className="btn btn-secondary text-lg">

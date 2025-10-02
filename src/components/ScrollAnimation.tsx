@@ -1,7 +1,7 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { ReactNode, useEffect, useState, memo } from 'react';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 interface ScrollAnimationProps {
@@ -13,7 +13,7 @@ interface ScrollAnimationProps {
   className?: string;
 }
 
-const ScrollAnimation = ({
+const ScrollAnimation = memo(({
   children,
   delay = 0,
   duration = 0.8,
@@ -21,10 +21,10 @@ const ScrollAnimation = ({
   type = 'fadeInUp',
   className = '',
 }: ScrollAnimationProps) => {
-  const controls = useAnimation();
   const [ref, inView] = useInView({
     triggerOnce: once,
-    threshold: 0.1,
+    threshold: 0.05,
+    rootMargin: '0px 0px -10% 0px',
   });
 
   const [isClient, setIsClient] = useState(false);
@@ -32,14 +32,6 @@ const ScrollAnimation = ({
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  useEffect(() => {
-    if (inView) {
-      controls.start('visible');
-    } else if (!once) {
-      controls.start('hidden');
-    }
-  }, [controls, inView, once]);
 
   // 不同類型的動畫變體
   const variants: any = {
@@ -137,13 +129,15 @@ const ScrollAnimation = ({
     <motion.div
       ref={ref}
       initial="hidden"
-      animate={controls}
+      animate={inView ? 'visible' : (once ? 'hidden' : 'hidden')}
       variants={variants[type]}
       className={className}
     >
       {children}
     </motion.div>
   );
-};
+});
+
+ScrollAnimation.displayName = 'ScrollAnimation';
 
 export default ScrollAnimation;

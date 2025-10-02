@@ -6,6 +6,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { useInView } from 'react-intersection-observer';
 
+// 將靜態數據移到組件外部以優化性能
 const spectrumPoints = [
   {
     id: 'doc',
@@ -48,7 +49,7 @@ const spectrumPoints = [
     id: 'isa',
     name: 'ISA-Level 可執行規格',
     description: [
-        { text: <>由「<a href="https://waterballsa.tw/ai-bdd/" target="_blank" rel="noopener noreferrer" className="text-[#00d3f3] font-bold underline hover:text-[#2ee9ff] transition-all duration-300">水球軟體學院這門課程</a>」中研發的方法論，先定義好「指令集架構」，每個指令對應一項系統操作或驗證，能確保 AI 產出的測試程式碼正確率將近 99%。</>, type: 'advantage' },
+        { text: <>由「<a href="https://waterballs.tw/sddtw-index" target="_blank" rel="noopener noreferrer" className="text-[#00d3f3] font-bold underline hover:text-[#2ee9ff] transition-all duration-300">水球軟體學院的 AIx BDD：規格驅動全自動開發術</a>」中研發的方法論，先定義好「指令集架構」，每個指令對應一項系統操作或驗證，能確保 AI 產出的測試程式碼正確率將近 99%。</>, type: 'advantage' },
         { text: '由於指令可直接對應程式架構，拓展性極高、關注點分立，Code Review 時間成本最低，甚至可達到 100% 正確而無需 Review。', type: 'advantage' },
         { text: '導入團隊門檻提高一些，對非技術背景角色有學習門檻，好比需要看懂 API Spec / ERD 才能寫出正確的指令，但學會後能高效參與。', type: 'disadvantage' },
         { text: '如果指令集架構過于複雜，則可執行規格也會開始變得過度複雜，使得測試意圖與產品意圖不一致。', type: 'disadvantage' },
