@@ -62,7 +62,7 @@ const Navbar = () => {
                 </Link>
               ))}
               <Link
-                href="/join"
+                href="https://waterballs.tw/sdd_dc_onboard"
                 className="btn btn-primary pulse-glow"
               >
                 加入社群
@@ -136,7 +136,7 @@ const Navbar = () => {
             </Link>
           ))}
           <Link
-            href="/join"
+            href="https://waterballs.tw/sdd_dc_onboard"
             className="block w-full text-center mt-4 btn btn-primary"
 
           >

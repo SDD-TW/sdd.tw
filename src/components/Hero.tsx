@@ -94,7 +94,7 @@ const Hero = () => {
           </motion.div>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 mb-16">
-            <Link href="/join" className="btn btn-primary text-lg pulse-glow">
+            <Link href="https://waterballs.tw/sdd_dc_onboard" className="btn btn-primary text-lg pulse-glow">
               加入社群
             </Link>
             <Link href="#methodology" className="btn btn-secondary text-lg">
