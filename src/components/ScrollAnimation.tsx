@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
@@ -13,7 +13,7 @@ interface ScrollAnimationProps {
   className?: string;
 }
 
-const ScrollAnimation = ({
+const ScrollAnimation = memo(({
   children,
   delay = 0,
   duration = 0.8,
@@ -136,6 +136,8 @@ const ScrollAnimation = ({
       {children}
     </motion.div>
   );
-};
+});
+
+ScrollAnimation.displayName = 'ScrollAnimation';
 
 export default ScrollAnimation;

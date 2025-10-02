@@ -6,6 +6,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { useInView } from 'react-intersection-observer';
 
+// 將靜態數據移到組件外部以優化性能
 const spectrumPoints = [
   {
     id: 'doc',

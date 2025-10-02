@@ -2,8 +2,50 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import SpecificationSpectrum from './SpecificationSpectrum'; // This will be created next
+import SpecificationSpectrum from './SpecificationSpectrum';
 import ScrollAnimation from './ScrollAnimation';
+
+// 將靜態數據移到組件外部，避免每次渲染時重新創建
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants: any = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.8,
+      ease: 'easeOut',
+    },
+  },
+};
+
+const myths = [
+  {
+    title: '誤解為「文件驅動」',
+    description: '以為只是「撰寫一堆文件」就叫做「規格驅動開發」，那為何不稱之為「文件驅動開發」就好？幹嘛又要發明一個新名詞 SDD？',
+  },
+  {
+    title: '規格無限制：對系統分析專業一知半解',
+    description: '對系統分析專業一知半解，無法分清楚業務規格和各種技術規格，把 SDD 變得和一般 Prompt/Context Engineering 沒兩樣。',
+  },
+  {
+    title: '團隊導入與衡量困難',
+    description: '難以導入團隊，以為寫一堆 PRD、User Story 就叫 SDD，但對於 AI 開發及 AI 與工程師的共識精度卻毫無計算標準。',
+  },
+  {
+    title: '缺乏工程文化上的信任',
+    description: '工程師不想寫文件，總是讓 AI 產文件，卻怠於判斷文件的精度。長久以往，大家對 SDD 半信半疑，燒一堆 AI Tokens 卻燒不出成效。',
+  },
+];
 
 const Methodology = () => {
   const [ref, inView] = useInView({
@@ -11,47 +53,6 @@ const Methodology = () => {
     threshold: 0.01,
     rootMargin: '200px 0px 0px 0px',
   });
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants: any = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.8,
-        ease: 'easeOut',
-      },
-    },
-  };
-
-  const myths = [
-    {
-      title: '誤解為「文件驅動」',
-      description: '以為只是「撰寫一堆文件」就叫做「規格驅動開發」，那為何不稱之為「文件驅動開發」就好？幹嘛又要發明一個新名詞 SDD？',
-    },
-    {
-      title: '規格無限制：對系統分析專業一知半解',
-      description: '對系統分析專業一知半解，無法分清楚業務規格和各種技術規格，把 SDD 變得和一般 Prompt/Context Engineering 沒兩樣。',
-    },
-    {
-      title: '團隊導入與衡量困難',
-      description: '難以導入團隊，以為寫一堆 PRD、User Story 就叫 SDD，但對於 AI 開發及 AI 與工程師的共識精度卻毫無計算標準。',
-    },
-    {
-      title: '缺乏工程文化上的信任',
-      description: '工程師不想寫文件，總是讓 AI 產文件，卻怠於判斷文件的精度。長久以往，大家對 SDD 半信半疑，燒一堆 AI Tokens 卻燒不出成效。',
-    },
-  ];
 
   return (
     <section id="methodology" className="section relative overflow-hidden">
