@@ -21,7 +21,7 @@ const Footer = () => {
               <span className="text-2xl font-bold gradient-text">臺灣規格驅動開發</span>
             </Link>
             <p className="text-gray-400 mb-6">
-              由<a href="https://waterballsa.tw/" target="_blank" rel="noopener noreferrer" className="text-[#2ee9ff] font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>創建的研究組織，專注於在臺推動 SDD（規格驅動開發）來放大百倍軟體產業的經濟規模。
+              由<a href="https://waterballs.tw/sddtw-index" target="_blank" rel="noopener noreferrer" className="text-[#2ee9ff] font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>創建的研究組織，專注於在臺推動 SDD（規格驅動開發）來放大百倍軟體產業的經濟規模。
             </p>
             <div className="flex space-x-4">
               <a href="https://www.facebook.com/groups/waterballsa.tw" className="text-gray-400 hover:text-white transition-colors">
@@ -126,7 +126,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 pt-6 mt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © {currentYear} 臺灣規格驅動開發. Founded by <a href="https://waterballsa.tw/" target="_blank" rel="noopener noreferrer" className="text-[#2ee9ff] font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>.
+              © {currentYear} 臺灣規格驅動開發. Founded by <a href="https://waterballs.tw/sddtw-index" target="_blank" rel="noopener noreferrer" className="text-[#2ee9ff] font-bold underline hover:text-yellow-300 transition-all duration-300 hover:brightness-125">水球軟體學院</a>.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="#" className="text-gray-400 hover:text-white text-sm transition-colors">
