@@ -31,11 +31,42 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['framer-motion', 'react-syntax-highlighter'],
   },
   
+  // URL rewrites
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap-20251008.xml',
+        destination: '/api/sitemap-20251008',
+      },
+    ];
+  },
+  
   // 確保 sitemap 可以被正確訪問
   async headers() {
     return [
       {
         source: '/sitemap.xml',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/xml',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      },
+      {
+        source: '/sitemap-20251008.xml',
         headers: [
           {
             key: 'Content-Type',
