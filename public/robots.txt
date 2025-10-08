@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://sdd.tw/sitemap.xml
+Sitemap: https://sdd.tw/sitemap-20251008.xml
+
