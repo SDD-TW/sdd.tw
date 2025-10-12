@@ -1,13 +1,16 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import Navbar from '@/components/Navbar';
+// import Navbar from '@/components/Navbar'; // Will be dynamically imported
 import Hero from '@/components/Hero';
 import Methodology from '@/components/Methodology';
 import Footer from '@/components/Footer';
 
-// 只對非關鍵的動畫背景使用 dynamic import
+// Dynamically import components that are client-side only or cause hydration issues
 const AnimatedBackground = dynamic(() => import('@/components/AnimatedBackground'), {
+  ssr: false,
+});
+const Navbar = dynamic(() => import('@/components/Navbar'), {
   ssr: false,
 });
 

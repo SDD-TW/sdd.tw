@@ -26,7 +26,8 @@ const Navbar = () => {
   const navLinks = [
     { name: '首頁', href: '/' },
     { name: '方法論', href: '/#methodology' },
-    { name: '技術', href: '/#technology' }
+    { name: '技術', href: '/#technology' },
+    { name: '成員', href: '/rank' }
   ];
 
   return (
