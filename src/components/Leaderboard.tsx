@@ -45,7 +45,7 @@ const Leaderboard = () => {
   return (
     <>
       <div className="bg-black/50 rounded-lg border border-cyan-500/30 shadow-lg w-full h-full p-6 backdrop-blur-sm">
-        <h3 className="font-mono text-lg text-cyan-300 mb-4 text-center">榮譽排行榜</h3>
+        <h3 className="font-mono text-lg text-cyan-300 mb-4 text-center">榮譽貢獻榜</h3>
         <div className="space-y-4">
           {loading ? (
             <p className="text-center text-gray-400">Loading...</p>

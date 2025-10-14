@@ -124,7 +124,7 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
               <div className="flex items-center space-x-3">
                 <GitPullRequest className="w-6 h-6 text-cyan-400" />
                 <div>
-                  <h2 className="text-xl font-bold text-white">Pull Request 記錄</h2>
+                  <h2 className="text-xl font-bold text-white">貢獻記錄</h2>
                   <p className="text-sm text-gray-400 mt-1">
                     @{username} 在 {owner}/{repo}
                   </p>
@@ -139,7 +139,7 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-6">
               {loading && (
                 <div className="flex items-center justify-center h-full">
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-400"></div>
@@ -155,7 +155,7 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
               {!loading && !error && pullRequests.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400">
                   <GitPullRequest className="w-16 h-16 mb-4 opacity-50" />
-                  <p>暫無 Pull Request 記錄</p>
+                  <p>暫無 貢獻紀錄</p>
                 </div>
               )}
 
@@ -257,7 +257,7 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
                                       )}
                                     </div>
                                     {review.body && (
-                                      <div className="prose prose-invert max-w-none text-sm break-words">
+                                      <div className="prose prose-invert max-w-none text-sm break-words hyphens-auto">
                                         <ReactMarkdown
                                           remarkPlugins={[remarkGfm]}
                                           components={{
@@ -288,13 +288,24 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
                                             ),
                                             code: ({ inline, ...props }: any) => (
                                               inline ? (
-                                                <code className="px-1.5 py-0.5 rounded bg-gray-800/80 text-cyan-300" {...props} />
+                                                <code className="px-1.5 py-0.5 rounded bg-gray-800/80 text-cyan-300 break-all" {...props} />
                                               ) : (
                                                 <code className="block p-3 rounded bg-gray-900/80 border border-gray-700 my-3 text-cyan-300 overflow-x-auto" {...props} />
                                               )
                                             ),
                                             a: (props: any) => (
-                                              <a className="text-cyan-400 hover:text-cyan-300 underline" target="_blank" rel="noopener noreferrer" {...props} />
+                                              <a className="text-cyan-400 hover:text-cyan-300 underline break-all" target="_blank" rel="noopener noreferrer" {...props} />
+                                            ),
+                                            table: (props: any) => (
+                                              <div className="overflow-x-auto -mx-2 my-3">
+                                                <table className="min-w-[480px] mx-2 border-collapse border border-gray-700" {...props} />
+                                              </div>
+                                            ),
+                                            th: (props: any) => (
+                                              <th className="border border-gray-700 px-3 py-2 bg-gray-800/60 text-left" {...props} />
+                                            ),
+                                            td: (props: any) => (
+                                              <td className="border border-gray-700 px-3 py-2 align-top" {...props} />
                                             ),
                                             img: (props: any) => (
                                               <>

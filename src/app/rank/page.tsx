@@ -41,7 +41,7 @@ const RankPage = async () => {
         {/* Section 1: Leaderboard */}
         <Section className="!pt-0">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
-                榮譽排行榜
+                榮譽貢獻榜
             </h2>
             <Leaderboard />
         </Section>
