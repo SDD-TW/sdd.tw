@@ -32,6 +32,7 @@ export interface Review {
   body: string | null;
   state: string;
   submittedAt: string;
+  pointsEarned?: number | null;
 }
 
 const octokit = new Octokit({
@@ -86,15 +87,50 @@ export async function getUserPullRequests(
           const l = (login || '').toLowerCase();
           return l === 'sdd-tw[bot]' || l === 'sdd-tw-bot' || (l.includes('sdd-tw') && l.includes('bot'));
         };
-        const startsWithTarget = (body?: string | null) => {
-          if (!body) return false;
-          const normalized = body.replace(/^\s*[#>\s]+/, ''); // 移除 Markdown 標題/引用與空白
-          return normalized.startsWith('本次獲得積分結算：');
+        const extractPoints = (body?: string | null): number | null => {
+          if (!body) return null;
+          // 寬鬆正規化：移除常見 Markdown 強調/反引號、全形逗號轉半形、合併空白
+          const text = body
+            .replace(/[\*`_~]/g, '')
+            .replace(/，/g, ',')
+            // 去除常見 emoji，避免干擾關鍵詞匹配（如 🎯 本次獲得積分結算）
+            .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}]/gu, '')
+            .replace(/\s+/g, ' ');
+          // 支援多種常見格式（優先：本次獲得積分結算 / 最終分數）
+          // 範例：
+          // - 本次獲得積分結算：1,835 分
+          // - 最終分數：479 分
+          // - 小計：34 分 / 唯一項目 ...：34 分 / 分數：123 分
+          // 備註：「分」字允許省略；冒號允許全形/半形；空白允許任意
+          const patterns = [
+            // 寬鬆：句型後可夾雜任意非數字字元，再出現數字
+            /本次[獲获]得?積分結算[^0-9]{0,20}([0-9][0-9,]*)/iu,
+            /最終分數[^0-9]{0,20}([0-9][0-9,]*)/iu,
+            /最終分數調整為[^0-9]{0,20}([0-9][0-9,]*)/iu,
+            /最終總計[^0-9]{0,20}([0-9][0-9,]*)/iu,
+            /小計\s*[:：]?\s*([0-9,]+)\s*分?/iu,
+            /唯一項目[^\d]*([0-9,]+)\s*分?/iu,
+            /分數\s*[:：]?\s*([0-9,]+)\s*分?/iu,
+          ];
+          for (const re of patterns) {
+            const m = text.match(re);
+            if (m && m[1]) {
+              const n = parseInt(m[1].replace(/,/g, ''), 10);
+              return Number.isFinite(n) ? n : null;
+            }
+          }
+          // 後備：抓取最後一個 "數字 分" 片段
+          const fallback = text.match(/([0-9][0-9,]*)\s*分(?!.*[0-9][0-9,]*\s*分)/i);
+          if (fallback && fallback[1]) {
+            const n = parseInt(fallback[1].replace(/,/g, ''), 10);
+            return Number.isFinite(n) ? n : null;
+          }
+          return null;
         };
 
         // 從 Review 與 Issue Comments 過濾出目標 bot 留言
         const filteredFromReviews: Review[] = reviews.data
-          .filter(r => isSddTwBot(r.user?.login) && startsWithTarget(r.body))
+          .filter(r => isSddTwBot(r.user?.login))
           .map((review) => ({
             id: review.id,
             user: {
@@ -104,10 +140,11 @@ export async function getUserPullRequests(
             body: review.body,
             state: review.state,
             submittedAt: review.submitted_at || '',
+            pointsEarned: extractPoints(review.body),
           }));
 
         const filteredFromIssueComments: Review[] = issueComments.data
-          .filter(c => isSddTwBot(c.user?.login) && startsWithTarget(c.body))
+          .filter(c => isSddTwBot(c.user?.login))
           .map((comment) => ({
             id: comment.id,
             user: {
@@ -117,6 +154,7 @@ export async function getUserPullRequests(
             body: comment.body || null,
             state: 'COMMENTED',
             submittedAt: comment.created_at || '',
+            pointsEarned: extractPoints(comment.body || ''),
           }));
 
         const botComments: Review[] = [...filteredFromReviews, ...filteredFromIssueComments]

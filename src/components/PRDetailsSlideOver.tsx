@@ -252,6 +252,9 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
                                       <span className="text-xs text-gray-400">
                                         {formatDate(review.submittedAt)}
                                       </span>
+                                      {typeof review.pointsEarned === 'number' && (
+                                        <span className="ml-auto text-xs font-semibold text-green-400">+{review.pointsEarned} 分</span>
+                                      )}
                                     </div>
                                     {review.body && (
                                       <div className="prose prose-invert max-w-none text-sm">
