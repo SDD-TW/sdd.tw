@@ -6,6 +6,7 @@ import Leaderboard from '@/components/Leaderboard';
 import { Suspense } from 'react';
 import ClientWrapper from './ClientWrapper';
 import ResearcherList from '@/components/ResearcherList';
+import PRMasonryWall from '@/components/PRMasonryWall';
 
 const Section = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <section className={`py-20 sm:py-32 ${className}`}>
@@ -39,17 +40,22 @@ const RankPage = async () => {
       <div className="relative z-10 pt-24">
 
         {/* Section 1: Leaderboard */}
-        <Section className="!pt-0">
+        <Section className="!pt-0 !pb-10">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
                 榮譽貢獻榜
             </h2>
             <Leaderboard />
         </Section>
+        {/* Section 2: Bubble Wall */}
+        <Section className="!py-15">
+          <PRMasonryWall />
+        </Section>
+     
         {/* Section 3: Stats */}
         <Section className="bg-black/50">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
-              社群數據
+              社群成員
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -72,7 +78,7 @@ const RankPage = async () => {
         </Section>
 
         {/* Section 4: Member List */}
-        <Section>
+        <Section className="!py-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
               研究員列表
