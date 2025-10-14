@@ -12,6 +12,8 @@ import PRDetailsSlideOver from './PRDetailsSlideOver';
 // TODO: 請在環境變數中設定這些值
 const GITHUB_REPO_OWNER = process.env.NEXT_PUBLIC_GITHUB_REPO_OWNER || 'your-org';
 const GITHUB_REPO_NAME = process.env.NEXT_PUBLIC_GITHUB_REPO_NAME || 'your-repo';
+// 前端硬編碼黑名單（僅供 UI 過濾使用）
+const LEADERBOARD_BLACKLIST_LOGINS = new Set<string>(['johnny850807']);
 
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardUser[]>([]);
@@ -24,7 +26,10 @@ const Leaderboard = () => {
       try {
         const response = await fetch('/api/leaderboard');
         const { data } = await response.json();
-        setLeaderboard(data);
+        // 前端過濾黑名單並重新編號名次
+        const filtered = (data as LeaderboardUser[]).filter(user => !LEADERBOARD_BLACKLIST_LOGINS.has(user.githubId));
+        const reRanked = filtered.map((user, idx) => ({ ...user, rank: idx + 1 }));
+        setLeaderboard(reRanked);
       } catch (error) {
         console.error("Failed to fetch leaderboard:", error);
       } finally {
