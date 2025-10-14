@@ -257,8 +257,65 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
                                       )}
                                     </div>
                                     {review.body && (
-                                      <div className="prose prose-invert max-w-none text-sm">
-                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{review.body}</ReactMarkdown>
+                                      <div className="prose prose-invert max-w-none text-sm break-words">
+                                        <ReactMarkdown
+                                          remarkPlugins={[remarkGfm]}
+                                          components={{
+                                            h1: (props: any) => (
+                                              <h1 className="text-lg font-semibold mt-5 mb-3 text-white" {...props} />
+                                            ),
+                                            h2: (props: any) => (
+                                              <h2 className="text-base font-semibold mt-5 mb-3 text-white" {...props} />
+                                            ),
+                                            h3: (props: any) => (
+                                              <h3 className="text-base font-semibold mt-4 mb-2 text-white" {...props} />
+                                            ),
+                                            p: (props: any) => (
+                                              <p className="my-3 leading-7 text-gray-300" {...props} />
+                                            ),
+                                            ul: (props: any) => (
+                                              <ul className="list-disc pl-6 my-3 space-y-1" {...props} />
+                                            ),
+                                            ol: (props: any) => (
+                                              <ol className="list-decimal pl-6 my-3 space-y-1" {...props} />
+                                            ),
+                                            li: (props: any) => (
+                                              <li className="my-1 leading-7" {...props} />
+                                            ),
+                        
+                                            blockquote: (props: any) => (
+                                              <blockquote className="border-l-4 border-cyan-500/40 pl-4 my-3 text-gray-300" {...props} />
+                                            ),
+                                            code: ({ inline, ...props }: any) => (
+                                              inline ? (
+                                                <code className="px-1.5 py-0.5 rounded bg-gray-800/80 text-cyan-300" {...props} />
+                                              ) : (
+                                                <code className="block p-3 rounded bg-gray-900/80 border border-gray-700 my-3 text-cyan-300 overflow-x-auto" {...props} />
+                                              )
+                                            ),
+                                            a: (props: any) => (
+                                              <a className="text-cyan-400 hover:text-cyan-300 underline" target="_blank" rel="noopener noreferrer" {...props} />
+                                            ),
+                                            img: (props: any) => (
+                                              <>
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img
+                                                className="max-w-full rounded border border-gray-700 my-3"
+                                                loading="lazy"
+                                                referrerPolicy="no-referrer"
+                                                  alt=""
+                                                onError={(e) => {
+                                                  const el = e.currentTarget as HTMLImageElement;
+                                                  el.style.display = 'none';
+                                                }}
+                                                  {...props}
+                                                />
+                                              </>
+                                            ),
+                                          }}
+                                        >
+                                          {review.body}
+                                        </ReactMarkdown>
                                       </div>
                                     )}
                                   </div>
