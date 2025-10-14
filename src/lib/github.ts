@@ -239,3 +239,143 @@ export async function getUserPullRequests(
   }
 }
 
+export async function getPullRequestDetails(
+  owner: string,
+  repo: string,
+  pullNumber: number,
+  debug: boolean = false
+): Promise<PullRequest> {
+  try {
+    const [prDetails, reviews, issueComments] = await Promise.all([
+      octokit.pulls.get({ owner, repo, pull_number: pullNumber }),
+      octokit.pulls.listReviews({ owner, repo, pull_number: pullNumber }),
+      octokit.issues.listComments({ owner, repo, issue_number: pullNumber, per_page: 100 }),
+    ]);
+
+    const pr = prDetails.data;
+
+    const isSddTwBot = (login?: string) => {
+      const l = (login || '').toLowerCase();
+      return l === 'sdd-tw[bot]' || l === 'sdd-tw-bot' || (l.includes('sdd-tw') && l.includes('bot'));
+    };
+    const extractPoints = (body?: string | null): number | null => {
+      if (!body) return null;
+      const text = body
+        .replace(/[\*`_~]/g, '')
+        .replace(/，/g, ',')
+        .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}]/gu, '')
+        .replace(/\s+/g, ' ');
+      const patterns = [
+        /本次[獲获]得?積分結算[^0-9]{0,20}([0-9][0-9,]*)/iu,
+        /最終分數[^0-9]{0,20}([0-9][0-9,]*)/iu,
+        /最終分數調整為[^0-9]{0,20}([0-9][0-9,]*)/iu,
+        /最終總計[^0-9]{0,20}([0-9][0-9,]*)/iu,
+        /小計\s*[:：]?\s*([0-9,]+)\s*分?/iu,
+        /唯一項目[^\d]*([0-9,]+)\s*分?/iu,
+        /分數\s*[:：]?\s*([0-9,]+)\s*分?/iu,
+      ];
+      for (const re of patterns) {
+        const m = text.match(re);
+        if (m && m[1]) {
+          const n = parseInt(m[1].replace(/,/g, ''), 10);
+          return Number.isFinite(n) ? n : null;
+        }
+      }
+      const fallback = text.match(/([0-9][0-9,]*)\s*分(?!.*[0-9][0-9,]*\s*分)/i);
+      if (fallback && fallback[1]) {
+        const n = parseInt(fallback[1].replace(/,/g, ''), 10);
+        return Number.isFinite(n) ? n : null;
+      }
+      return null;
+    };
+
+    const filteredFromReviews = reviews.data
+      .filter(r => isSddTwBot(r.user?.login))
+      .map((review) => ({
+        id: review.id,
+        user: {
+          login: review.user?.login || '',
+          avatarUrl: review.user?.avatar_url || '',
+        },
+        body: review.body,
+        state: review.state,
+        submittedAt: review.submitted_at || '',
+        pointsEarned: extractPoints(review.body),
+      }));
+
+    const filteredFromIssueComments = issueComments.data
+      .filter(c => isSddTwBot(c.user?.login))
+      .map((comment) => ({
+        id: comment.id,
+        user: {
+          login: comment.user?.login || '',
+          avatarUrl: comment.user?.avatar_url || '',
+        },
+        body: comment.body || null,
+        state: 'COMMENTED',
+        submittedAt: comment.created_at || '',
+        pointsEarned: extractPoints(comment.body || ''),
+      }));
+
+    const botComments = [...filteredFromReviews, ...filteredFromIssueComments]
+      .sort((a, b) => new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime());
+
+    if (debug) {
+      console.log('[GitHub][Single PR]', {
+        number: pr.number,
+        title: pr.title,
+        author: pr.user?.login,
+        matchedBotCommentsCount: botComments.length,
+      });
+    }
+
+    return {
+      number: pr.number,
+      title: pr.title,
+      state: pr.state,
+      createdAt: pr.created_at as unknown as string,
+      mergedAt: pr.merged_at as unknown as string | null,
+      closedAt: pr.closed_at as unknown as string | null,
+      htmlUrl: pr.html_url,
+      body: pr.body || null,
+      user: {
+        login: pr.user?.login || '',
+        avatarUrl: (pr.user as any)?.avatar_url || '',
+      },
+      additions: pr.additions || 0,
+      deletions: pr.deletions || 0,
+      changedFiles: pr.changed_files || 0,
+      reviews: reviews.data.map((review) => ({
+        id: review.id,
+        user: {
+          login: review.user?.login || '',
+          avatarUrl: review.user?.avatar_url || '',
+        },
+        body: review.body,
+        state: review.state,
+        submittedAt: review.submitted_at || '',
+      })),
+      botComments,
+      ...(debug
+        ? {
+            debugReviewSummary: reviews.data.map(r => ({
+              id: r.id,
+              user: r.user?.login,
+              startsWithTarget: (r.body || '').trim().startsWith('本次獲得積分結算：'),
+              bodyHead: (r.body || '').slice(0, 40),
+            })),
+            debugIssueCommentSummary: issueComments.data.map(c => ({
+              id: c.id,
+              user: c.user?.login,
+              startsWithTarget: (c.body || '').trim().startsWith('本次獲得積分結算：'),
+              bodyHead: (c.body || '').slice(0, 40),
+            })),
+          }
+        : {}),
+    };
+  } catch (error) {
+    console.error('Error fetching PR details from GitHub:', error);
+    throw error;
+  }
+}
+
