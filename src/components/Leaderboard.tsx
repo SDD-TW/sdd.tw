@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { LeaderboardUser } from '@/app/api/leaderboard/route';
 import Image from 'next/image';
+import Lottie from 'lottie-react';
+import loadingAnim from '../../public/Just Flow - Teal.json';
 import PRDetailsSlideOver from './PRDetailsSlideOver';
 
 // TODO: 請在環境變數中設定這些值
@@ -47,8 +49,12 @@ const Leaderboard = () => {
       <div className="bg-black/50 rounded-lg border border-cyan-500/30 shadow-lg w-full h-full p-6 backdrop-blur-sm">
         <h3 className="font-mono text-lg text-cyan-300 mb-4 text-center">榮譽貢獻榜</h3>
         <div className="space-y-4">
-          {loading ? (
-            <p className="text-center text-gray-400">Loading...</p>
+        {loading ? (
+            <div className="flex flex-col items-center justify-center py-6">
+              <div className="w-40 h-40">
+                <Lottie animationData={loadingAnim} loop autoplay />
+              </div>
+            </div>
           ) : (
             leaderboard.map((user, index) => (
               <motion.div
