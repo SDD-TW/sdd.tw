@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@octokit/rest": "^22.0.0",
     "framer-motion": "^12.23.18",
     "googleapis": "^162.0.0",
     "lucide-react": "^0.545.0",
