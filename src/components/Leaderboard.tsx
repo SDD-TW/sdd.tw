@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { LeaderboardUser } from '@/app/api/leaderboard/route';
 import Image from 'next/image';
 import Lottie from 'lottie-react';
-import loadingAnim from '../../public/Just Flow - Teal.json';
+import loadingAnim from '../../public/Loading Amimation.json';
 import PRDetailsSlideOver from './PRDetailsSlideOver';
 
 // TODO: 請在環境變數中設定這些值
