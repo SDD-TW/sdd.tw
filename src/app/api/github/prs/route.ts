@@ -7,6 +7,7 @@ export async function GET(request: Request) {
     const username = searchParams.get('username');
     const owner = searchParams.get('owner');
     const repo = searchParams.get('repo');
+    const debug = searchParams.get('debug') === '1';
 
     if (!username) {
       return NextResponse.json(
@@ -22,7 +23,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const pullRequests = await getUserPullRequests(owner, repo, username);
+    const pullRequests = await getUserPullRequests(owner, repo, username, debug);
 
     return NextResponse.json({ data: pullRequests });
   } catch (error) {

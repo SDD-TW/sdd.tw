@@ -1,10 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X, GitPullRequest, GitMerge, Calendar, FileCode, GitBranch, MessageSquare, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { X, GitPullRequest, GitMerge, Calendar, FileCode, GitBranch, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { PullRequest } from '@/lib/github';
 
 interface PRDetailsSlideOverProps {
@@ -21,30 +23,7 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
   const [error, setError] = useState<string | null>(null);
   const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
 
-  useEffect(() => {
-    if (isOpen && username) {
-      fetchPullRequests();
-    }
-  }, [isOpen, username]);
-
-  // Ensure rendering above all stacking contexts
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const existing = document.getElementById('pr-slide-over-root');
-    if (existing) {
-      setPortalEl(existing);
-      return;
-    }
-    const el = document.createElement('div');
-    el.id = 'pr-slide-over-root';
-    document.body.appendChild(el);
-    setPortalEl(el);
-    return () => {
-      if (el.parentNode) el.parentNode.removeChild(el);
-    };
-  }, []);
-
-  const fetchPullRequests = async () => {
+  const fetchPullRequests = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -64,7 +43,32 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
     } finally {
       setLoading(false);
     }
-  };
+  }, [username, owner, repo]);
+
+  useEffect(() => {
+    if (isOpen && username) {
+      fetchPullRequests();
+    }
+  }, [isOpen, username, fetchPullRequests]);
+
+  // Ensure rendering above all stacking contexts
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const existing = document.getElementById('pr-slide-over-root');
+    if (existing) {
+      setPortalEl(existing);
+      return;
+    }
+    const el = document.createElement('div');
+    el.id = 'pr-slide-over-root';
+    document.body.appendChild(el);
+    setPortalEl(el);
+    return () => {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    };
+  }, []);
+
+  
 
   const getPRStateIcon = (state: string, mergedAt: string | null) => {
     if (mergedAt) {
@@ -82,18 +86,7 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
     return '已關閉';
   };
 
-  const getReviewStateIcon = (state: string) => {
-    switch (state) {
-      case 'APPROVED':
-        return <CheckCircle className="w-4 h-4 text-green-400" />;
-      case 'CHANGES_REQUESTED':
-        return <XCircle className="w-4 h-4 text-red-400" />;
-      case 'COMMENTED':
-        return <MessageSquare className="w-4 h-4 text-blue-400" />;
-      default:
-        return <AlertCircle className="w-4 h-4 text-gray-400" />;
-    }
-  };
+  
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-TW', {
@@ -233,15 +226,15 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
                         )}
                       </div>
 
-                      {/* Reviews */}
-                      {pr.reviews.length > 0 && (
+                      {/* SDD-TW Bot 結算留言 */}
+                      {pr.botComments.length > 0 && (
                         <div className="border-t border-gray-700 pt-4">
                           <h4 className="text-sm font-semibold text-gray-300 mb-3 flex items-center">
                             <MessageSquare className="w-4 h-4 mr-2" />
-                            評論 ({pr.reviews.length})
+                            積分結算留言 ({pr.botComments.length})
                           </h4>
                           <div className="space-y-3">
-                            {pr.reviews.map((review) => (
+                            {pr.botComments.map((review) => (
                               <div key={review.id} className="bg-gray-900/50 rounded p-3 border border-gray-700">
                                 <div className="flex items-start space-x-3">
                                   <Image
@@ -256,15 +249,14 @@ const PRDetailsSlideOver = ({ isOpen, onClose, username, owner, repo }: PRDetail
                                       <span className="text-sm font-semibold text-white">
                                         {review.user.login}
                                       </span>
-                                      {getReviewStateIcon(review.state)}
                                       <span className="text-xs text-gray-400">
                                         {formatDate(review.submittedAt)}
                                       </span>
                                     </div>
                                     {review.body && (
-                                      <p className="text-sm text-gray-300 whitespace-pre-wrap">
-                                        {review.body}
-                                      </p>
+                                      <div className="prose prose-invert max-w-none text-sm">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{review.body}</ReactMarkdown>
+                                      </div>
                                     )}
                                   </div>
                                 </div>
