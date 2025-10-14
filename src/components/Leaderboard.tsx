@@ -77,6 +77,8 @@ const Leaderboard = () => {
                 <div className="flex items-center space-x-2">
                   {user.isPayingUser && <Gem className="w-5 h-5 text-purple-400 glow" />}
                   {user.rank === 1 && <Crown className="w-6 h-6 text-yellow-400 glow" />}
+                  {user.rank === 2 && <Crown className="w-6 h-6 text-[#53e9fb] glow" />}
+                  {user.rank === 3 && <Crown className="w-6 h-6 text-blue-400 glow" />}
                 </div>
               </motion.div>
             ))
