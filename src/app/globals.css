@@ -55,6 +55,22 @@ body {
   }
 }
 
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(200px); opacity: 1; } /* Adjust distance based on component height */
+  100% { transform: translateY(0); opacity: 0.5; }
+}
+
+.animate-scan {
+  animation: scan 4s ease-in-out infinite;
+}
+
 /* 未來感特效的基本樣式 */
 .glow {
   text-shadow: 0 0 10px rgba(52, 144, 220, 0.5),
