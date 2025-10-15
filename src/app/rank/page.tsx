@@ -78,7 +78,7 @@ const RankPage = async () => {
         </Section>
 
         {/* Section 4: Member List */}
-        <Section className="!py-10">
+        <Section className="!pt-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
               研究員列表

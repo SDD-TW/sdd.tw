@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { CrmRecord } from '@/lib/crm';
 import GithubAvatar from '@/components/GithubAvatar';
+import ResearcherDetailSlideOver from '@/components/ResearcherDetailSlideOver';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ResearcherListProps {
@@ -14,12 +15,14 @@ const ITEMS_PER_PAGE = 10;
 export default function ResearcherList({ initialResearchers }: ResearcherListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedResearcher, setSelectedResearcher] = useState<CrmRecord | null>(null);
+  const [isSlideOverOpen, setIsSlideOverOpen] = useState(false);
 
   const filteredResearchers = initialResearchers.filter(member => {
     const githubName = member['GIthub user name'] || '';
     const discordName = member['Discord 名稱'] || '';
     return githubName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           discordName.toLowerCase().includes(searchTerm.toLowerCase());
+          discordName.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const totalPages = Math.ceil(filteredResearchers.length / ITEMS_PER_PAGE);
@@ -34,6 +37,16 @@ export default function ResearcherList({ initialResearchers }: ResearcherListPro
 
   const handlePrevPage = () => {
     setCurrentPage(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleResearcherClick = (researcher: CrmRecord) => {
+    setSelectedResearcher(researcher);
+    setIsSlideOverOpen(true);
+  };
+
+  const handleCloseSlideOver = () => {
+    setIsSlideOverOpen(false);
+    setSelectedResearcher(null);
   };
 
   return (
@@ -55,7 +68,8 @@ export default function ResearcherList({ initialResearchers }: ResearcherListPro
         {paginatedResearchers.map((member) => (
           <div
             key={member['Discord ID']}
-            className="bg-gray-800/50 border border-cyan-800/50 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-700/70 hover:border-cyan-500/70 transition-all duration-300 backdrop-blur-sm"
+            onClick={() => handleResearcherClick(member)}
+            className="bg-gray-800/50 border border-cyan-800/50 rounded-lg p-4 flex items-center space-x-4 hover:bg-gray-700/70 hover:border-cyan-500/70 transition-all duration-300 backdrop-blur-sm cursor-pointer"
           >
             <div className="relative w-16 h-16 flex-shrink-0">
               <GithubAvatar username={member['GIthub user name']} displayName={member['Discord 名稱']} />
@@ -110,6 +124,13 @@ export default function ResearcherList({ initialResearchers }: ResearcherListPro
           </button>
         </div>
       )}
+
+      {/* Researcher Detail SlideOver */}
+      <ResearcherDetailSlideOver
+        isOpen={isSlideOverOpen}
+        onClose={handleCloseSlideOver}
+        researcher={selectedResearcher}
+      />
     </div>
   );
 }
