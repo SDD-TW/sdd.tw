@@ -9,11 +9,21 @@ import {
 import { sendTeamCreatedNotification } from '@/lib/discordApi';
 import { getCrmData } from '@/lib/crm';
 
-const GOOGLE_APPS_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbzGQqJ7EV112KMqms9HbF-TkqsBLLhF00lLkHSOt-9KdQqak7P5u42c0Y-RDk28bWlslA/exec';
-
 export async function POST(request: NextRequest) {
   try {
+    // 驗證環境變數
+    const GOOGLE_APPS_SCRIPT_URL = process.env.GOOGLE_APPS_SCRIPT_URL;
+    if (!GOOGLE_APPS_SCRIPT_URL) {
+      console.error('GOOGLE_APPS_SCRIPT_URL is not defined in environment variables');
+      return NextResponse.json(
+        {
+          success: false,
+          error: '伺服器設定錯誤',
+        },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
 
     // 驗證必填欄位

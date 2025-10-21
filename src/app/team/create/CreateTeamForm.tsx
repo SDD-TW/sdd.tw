@@ -1339,7 +1339,8 @@ const CreateTeamForm: NextPage = () => {
                     <button
                       type="button"
                       onClick={handlePrevious}
-                      className="px-6 py-3 bg-transparent border-2 border-cyan-500 text-cyan-400 rounded-lg font-semibold hover:bg-cyan-500/10 transition-all duration-200"
+                      disabled={isSubmitting}
+                      className="px-6 py-3 bg-transparent border-2 border-cyan-500 text-cyan-400 rounded-lg font-semibold hover:bg-cyan-500/10 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                     >
                       ← 上一步
                     </button>
