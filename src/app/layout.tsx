@@ -47,10 +47,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://sdd.tw/logo.png",
+        url: "https://sdd.tw/og-image.png",
         width: 1200,
         height: 630,
-        alt: "臺灣規格驅動開發",
+        alt: "臺灣規格驅動開發 - 致力於在臺推動 SDD（100% 全自動化開發準開源技術）來擴大臺灣軟體公司經濟規模百倍",
       },
     ],
   },
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SDD.tw | 臺灣規格驅動開發",
     description: "專注於推動 SDD（規格驅動開發），實現全自動化開發。",
-    images: ["https://sdd.tw/logo.png"],
+    images: ["https://sdd.tw/og-image.png"],
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
