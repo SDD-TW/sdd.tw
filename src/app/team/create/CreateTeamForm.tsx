@@ -5,6 +5,7 @@ import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { BookOpen, Users, MessageCircle, TrendingUp } from 'lucide-react';
 
 // 使用 dynamic import 來避免 SSR 問題
 const AnimatedBackground = dynamic(() => import('@/components/AnimatedBackground'), {
@@ -35,7 +36,10 @@ interface FormData {
   member5DiscordId: string;
   member6DiscordId: string;
   
-  // 步驟 4：確認
+  // 步驟 4：組隊串 Link（選填）
+  dcTeamLink: string;
+  
+  // 步驟 5：確認
   confirmation: boolean;
 }
 
@@ -62,6 +66,7 @@ interface SubmissionResult {
   evaluationDate: string;
   captainName: string;
   members: { discordName: string; discordId: string }[];
+  dcTeamLink?: string;
 }
 
 const CreateTeamForm: NextPage = () => {
@@ -84,6 +89,7 @@ const CreateTeamForm: NextPage = () => {
     member4DiscordId: '',
     member5DiscordId: '',
     member6DiscordId: '',
+    dcTeamLink: '',
     confirmation: false,
   });
 
@@ -94,6 +100,7 @@ const CreateTeamForm: NextPage = () => {
   const [isCheckingMembers, setIsCheckingMembers] = useState(false);
   const [isLookingUpMember, setIsLookingUpMember] = useState(false);
   const [captainDataAutoFilled, setCaptainDataAutoFilled] = useState(false);
+  const [showDcLinkWarning, setShowDcLinkWarning] = useState(false);
   const [teamNameStatus, setTeamNameStatus] = useState<{
     available: boolean | null;
     message: string;
@@ -133,7 +140,7 @@ const CreateTeamForm: NextPage = () => {
     member6: false,
   });
 
-  const totalSteps = 4;
+  const totalSteps = 5;
 
   // 顯示通知
   const showNotification = (type: 'success' | 'error' | 'warning' | 'info', message: string, duration: number = 5000) => {
@@ -558,7 +565,15 @@ const CreateTeamForm: NextPage = () => {
         });
       }
     } else if (step === 4) {
-      // 步驟 4：確認
+      // 步驟 4：組隊串 Link（選填，不驗證）
+      // 如果有填，簡單驗證是否為有效的 Discord 連結
+      if (formData.dcTeamLink.trim()) {
+        if (!formData.dcTeamLink.includes('discord.com/channels/')) {
+          newErrors.dcTeamLink = '請輸入有效的 Discord 組隊串連結';
+        }
+      }
+    } else if (step === 5) {
+      // 步驟 5：確認
       if (!formData.confirmation) {
         newErrors.confirmation = '請確認您已閱讀並同意相關規定';
       }
@@ -571,6 +586,12 @@ const CreateTeamForm: NextPage = () => {
   // 下一步
   const handleNext = async () => {
     if (!validateStep(currentStep)) {
+      return;
+    }
+
+    // 步驟 4：如果未填寫組隊串連結，顯示警告
+    if (currentStep === 4 && !formData.dcTeamLink.trim()) {
+      setShowDcLinkWarning(true);
       return;
     }
 
@@ -687,7 +708,7 @@ const CreateTeamForm: NextPage = () => {
 
   // 提交表單
   const handleSubmit = async () => {
-    if (!validateStep(4)) {
+    if (!validateStep(5)) {
       return;
     }
 
@@ -713,6 +734,7 @@ const CreateTeamForm: NextPage = () => {
           member6DiscordId: formData.member6DiscordId.trim(),
           teamDescription: formData.teamDescription.trim(),
           confirmation: '我已閱讀並同意相關規定',
+          dc_team_link: formData.dcTeamLink.trim() || '',
         }),
       });
 
@@ -748,6 +770,7 @@ const CreateTeamForm: NextPage = () => {
           evaluationDate: result.evaluationDate || '',
           captainName: formData.captainNickname,
           members,
+          dcTeamLink: formData.dcTeamLink.trim() || undefined,
         });
       } else {
         // 失敗 - 停止進度並重置
@@ -767,8 +790,8 @@ const CreateTeamForm: NextPage = () => {
   // 渲染步驟指示器
   const renderStepIndicator = () => {
     return (
-      <div className="flex items-center justify-center mb-12">
-        {[1, 2, 3, 4].map((step) => (
+      <div className="flex items-center justify-center mb-12 overflow-x-auto">
+        {[1, 2, 3, 4, 5].map((step) => (
           <div key={step} className="flex items-center">
             <div
               className={`relative flex items-center justify-center w-12 h-12 rounded-full font-bold transition-all duration-300 ${
@@ -781,9 +804,9 @@ const CreateTeamForm: NextPage = () => {
             >
               {step < currentStep ? '✓' : step}
             </div>
-            {step < 4 && (
+            {step < 5 && (
               <div
-                className={`w-16 h-1 mx-2 transition-all duration-300 ${
+                className={`w-12 h-1 mx-2 transition-all duration-300 ${
                   step < currentStep
                     ? 'bg-gradient-to-r from-green-500 to-cyan-500'
                     : 'bg-gray-700/50'
@@ -1142,8 +1165,239 @@ const CreateTeamForm: NextPage = () => {
     );
   };
 
-  // 渲染步驟 4：確認與提交
-  const renderStep4 = () => {
+  // 渲染步驟 4：發佈組隊貼文（選填）
+  const renderStep4 = () => (
+    <div className="space-y-6 animate-fadeIn">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2">
+          讓你的隊伍被看見！
+        </h2>
+        <p className="text-gray-400">在 Discord 組隊頻道發佈你的組隊貼文，吸引更多優秀成員加入！</p>
+        <p className="text-sm text-cyan-400 mt-2">填寫組隊串連結，招募效果更好哦</p>
+      </div>
+
+      {/* 教學引導卡片 */}
+      <div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 border-2 border-blue-500/50 rounded-xl p-6 space-y-4">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <h3 className="text-xl font-bold text-blue-400">如何創建組隊串？</h3>
+        </div>
+
+        {/* 步驟說明 */}
+        <div className="space-y-4 text-gray-300">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-[0_0_10px_rgba(0,240,255,0.5)]">
+              1
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-cyan-400 mb-1">前往 Discord 組隊頻道</p>
+              <p className="text-sm text-gray-400">
+                點擊下方的「前往 Discord 組隊頻道」按鈕
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-[0_0_10px_rgba(0,240,255,0.5)]">
+              2
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-cyan-400 mb-1">選擇「組隊串」</p>
+              <p className="text-sm text-gray-400">
+                在頻道中找到「組隊串」標籤，點擊進入
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-[0_0_10px_rgba(0,240,255,0.5)]">
+              3
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-cyan-400 mb-1">建立新貼文</p>
+              <p className="text-sm text-gray-400 mb-2">
+                點擊右上角「新貼文」按鈕，標題輸入你的隊名：<span className="font-mono text-white bg-gray-800 px-2 py-0.5 rounded">{formData.teamName}</span>
+              </p>
+              <p className="text-sm text-yellow-400 flex items-center gap-1.5">
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <span>重要：貼文底下的 tag 要選擇「組隊串」</span>
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-[0_0_10px_rgba(0,240,255,0.5)]">
+              4
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-cyan-400 mb-1">填寫組隊資訊</p>
+              <p className="text-sm text-gray-400">
+                在貼文內容中簡單介紹你的隊伍、目標和招募需求
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-[0_0_10px_rgba(0,240,255,0.5)]">
+              5
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-cyan-400 mb-1">複製貼文連結</p>
+              <p className="text-sm text-gray-400">
+                發佈後，點擊貼文右上角「⋯」→「複製連結」→ 貼到下方欄位
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Discord 快速按鈕 */}
+        <div className="pt-4 flex justify-center">
+          <a
+            href="https://discord.com/channels/1295275227848249364/1295645775652716646"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#5865F2] to-[#7289DA] hover:from-[#4752C4] hover:to-[#5B6FB8] text-white font-bold rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(88,101,242,0.6)] hover:shadow-[0_0_35px_rgba(88,101,242,0.9)] transform hover:scale-105 active:scale-95 text-lg"
+          >
+            <svg className="w-7 h-7" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clipPath="url(#clip0)">
+                <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="currentColor"/>
+              </g>
+            </svg>
+            <span>前往 Discord 組隊頻道</span>
+          </a>
+        </div>
+      </div>
+
+      {/* Discord Link 輸入 */}
+      <div>
+        <label htmlFor="dcTeamLink" className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
+          <span>組隊串連結</span>
+          <span className="text-gray-500 text-xs">（選填，但建議填寫）</span>
+        </label>
+        <input
+          type="url"
+          id="dcTeamLink"
+          name="dcTeamLink"
+          value={formData.dcTeamLink}
+          onChange={handleInputChange}
+          className={`w-full px-4 py-3 bg-gray-800/50 border-2 ${
+            errors.dcTeamLink
+              ? 'border-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]'
+              : formData.dcTeamLink.trim()
+              ? 'border-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]'
+              : 'border-cyan-600/50'
+          } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 focus:shadow-[0_0_12px_rgba(0,240,255,0.4)] transition-all duration-200`}
+          placeholder="貼上你的 Discord 組隊貼文連結..."
+        />
+        {errors.dcTeamLink && (
+          <p className="mt-2 text-sm text-red-500 animate-fadeIn">{errors.dcTeamLink}</p>
+        )}
+        {formData.dcTeamLink.trim() && !errors.dcTeamLink && (
+          <p className="mt-2 text-sm text-green-500 animate-fadeIn flex items-center gap-1">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            太棒了！組隊串連結已填入
+          </p>
+        )}
+        <p className="mt-2 text-sm text-cyan-400 flex items-center gap-1">
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+          填寫組隊串連結，讓更多人看到你的隊伍！
+        </p>
+      </div>
+
+      {/* 強化版提示卡片 */}
+      <div className="bg-gradient-to-r from-yellow-900/30 to-orange-900/30 border-2 border-yellow-500/40 rounded-xl p-5 shadow-[0_0_15px_rgba(234,179,8,0.3)]">
+        <div className="flex items-start gap-4">
+          <div className="text-3xl animate-pulse">✨</div>
+          <div className="flex-1">
+            <p className="text-yellow-400 font-bold text-lg mb-3">為什麼要發佈組隊貼文？</p>
+            <ul className="text-sm text-gray-300 space-y-2">
+              <li className="flex items-start gap-2">
+                <Users className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                <span><strong className="text-white">吸引新成員：</strong>讓其他人看到你的隊伍，增加招募機會</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <MessageCircle className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                <span><strong className="text-white">專屬討論串：</strong>團隊成員可以在貼文下方即時溝通</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <TrendingUp className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                <span><strong className="text-white">展示隊伍：</strong>讓社群看到你們的學習進度和成果</span>
+              </li>
+            </ul>
+            <div className="mt-4 pt-4 border-t border-yellow-500/20">
+              <p className="text-xs text-gray-400 flex items-center gap-1">
+                <svg className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span><strong className="text-yellow-400">未填寫可能影響招募效果</strong> - 其他人可能不知道你的隊伍在找人</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 未填寫警告 Modal */}
+      {showDcLinkWarning && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn px-4">
+          <div className="bg-gray-900 border-2 border-yellow-500 rounded-2xl shadow-[0_0_40px_rgba(234,179,8,0.5)] max-w-md w-full p-6 animate-scaleIn">
+          {/* 警告圖標 */}
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center animate-pulse">
+              <svg className="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+          </div>
+
+            {/* 標題 */}
+            <h3 className="text-2xl font-bold text-center text-yellow-400 mb-3">
+              未填寫組隊串連結
+            </h3>
+
+            {/* 訊息 */}
+            <p className="text-gray-300 text-center mb-6 leading-relaxed">
+              未填寫組隊串連結<strong className="text-yellow-400">可能影響招募效果</strong>。建議先在 Discord 發佈組隊貼文並填寫連結，讓更多人看到你的隊伍！
+            </p>
+
+            {/* 按鈕群組 */}
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => setShowDcLinkWarning(false)}
+                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold rounded-lg transition-all duration-200 shadow-[0_0_20px_rgba(0,240,255,0.5)] hover:shadow-[0_0_30px_rgba(0,240,255,0.7)] transform hover:scale-105"
+              >
+                🔙 返回填寫連結
+              </button>
+              <button
+                onClick={() => {
+                  setShowDcLinkWarning(false);
+                  setCurrentStep(5);
+                }}
+                className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white font-semibold rounded-lg transition-all duration-200 border border-gray-600"
+              >
+                跳過，繼續下一步 →
+              </button>
+            </div>
+
+            {/* 提示 */}
+            <p className="text-xs text-gray-500 text-center mt-4">
+              你隨時可以回來填寫組隊串連結
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  // 渲染步驟 5：確認與提交
+  const renderStep5 = () => {
     // 隱藏 Discord ID 中間部分
     const maskDiscordId = (id: string) => {
       if (!id) return id;
@@ -1155,6 +1409,27 @@ const CreateTeamForm: NextPage = () => {
       const visibleLength = 4;
       const maskLength = id.length - visibleLength * 2;
       return id.slice(0, visibleLength) + '*'.repeat(maskLength) + id.slice(-visibleLength);
+    };
+
+    // 遮罩 Email（顯示前面和後面，中間用星號）
+    const maskEmail = (email: string) => {
+      if (!email) return email;
+      
+      const [localPart, domain] = email.split('@');
+      if (!localPart || !domain) return email;
+      
+      // 如果 local part 太短，不遮罩
+      if (localPart.length <= 3) {
+        return email;
+      }
+      
+      // 顯示前 2 個字符和後 1 個字符，中間用星號
+      const visibleStart = 2;
+      const visibleEnd = 1;
+      const maskLength = localPart.length - visibleStart - visibleEnd;
+      const maskedLocal = localPart.slice(0, visibleStart) + '*'.repeat(maskLength) + localPart.slice(-visibleEnd);
+      
+      return `${maskedLocal}@${domain}`;
     };
 
     const memberCount =
@@ -1258,7 +1533,10 @@ const CreateTeamForm: NextPage = () => {
         {/* 隊長資訊 */}
         <div className="p-6 bg-gray-800/40 border-2 border-cyan-500/50 rounded-xl shadow-[0_0_20px_rgba(0,240,255,0.2)]">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-cyan-400">👤 隊長資訊</h3>
+            <h3 className="text-xl font-bold text-cyan-400 flex items-center gap-2">
+              <span>👑</span>
+              <span>隊長資訊</span>
+            </h3>
             <button
               type="button"
               onClick={() => goToStep(2)}
@@ -1297,12 +1575,13 @@ const CreateTeamForm: NextPage = () => {
           </div>
           <div className="space-y-2 text-gray-300">
             {[2, 3, 4, 5, 6].map((num) => {
-              const id = formData[`member${num}DiscordId` as keyof FormData] as string;
-              if (!id) return null;
+              const memberKey = `member${num}` as 'member2' | 'member3' | 'member4' | 'member5' | 'member6';
+              const member = memberData[memberKey];
+              if (!member) return null;
               return (
                 <p key={num}>
                   <span className="text-gray-400">成員 {num}：</span>
-                  <span className="font-mono">{maskDiscordId(id)}</span>
+                  <span className="font-mono">{maskEmail(member.email)}</span>
                 </p>
               );
             })}
@@ -1343,6 +1622,8 @@ const CreateTeamForm: NextPage = () => {
         return renderStep3();
       case 4:
         return renderStep4();
+      case 5:
+        return renderStep5();
       default:
         return null;
     }
@@ -1411,7 +1692,12 @@ const CreateTeamForm: NextPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {submissionResult.members.map((member, index) => (
                       <div key={index} className="bg-gray-800/50 rounded-lg p-3">
-                        <p className="text-white text-sm">{member.discordName}</p>
+                        <p className="text-white text-sm flex items-center gap-2">
+                          <span>{member.discordName}</span>
+                          {index === 0 && (
+                            <span className="text-yellow-400" title="隊長">👑</span>
+                          )}
+                        </p>
                         <p className="text-gray-400 text-xs font-mono mt-1">ID: {member.discordId.slice(0, 4)}****{member.discordId.slice(-4)}</p>
                       </div>
                     ))}
@@ -1430,9 +1716,35 @@ const CreateTeamForm: NextPage = () => {
                     <div className="text-4xl">⏰</div>
                   </div>
                   <p className="text-gray-400 text-sm mt-3">
-                    請在評鑑日期前完成學習任務，我們會在 Discord 頻道發送提醒通知
+                    請在評鑑日期前完成積分任務，後續相關訊息會在 Discord 頻道發送通知。
                   </p>
                 </div>
+
+                {/* 組隊串連結（如果有填） */}
+                {submissionResult.dcTeamLink && (
+                  <div className="bg-gradient-to-r from-blue-900/50 to-cyan-900/50 rounded-lg p-6 border border-blue-500/30">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="text-3xl">💬</div>
+                      <div>
+                        <p className="text-blue-400 font-semibold">組隊串已建立</p>
+                        <p className="text-gray-400 text-sm">團隊溝通的專屬空間</p>
+                      </div>
+                    </div>
+                    <a
+                      href={submissionResult.dcTeamLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#5865F2] hover:bg-[#4752C4] text-white text-sm font-semibold rounded-lg transition-all duration-200 transform hover:scale-105"
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clipPath="url(#clip0)">
+                          <path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.440769 45.4204 0.525289C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.525289C25.5141 0.443589 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z" fill="currentColor"/>
+                        </g>
+                      </svg>
+                      前往組隊串
+                    </a>
+                  </div>
+                )}
 
                 {/* 重要提示 */}
                 <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
@@ -1444,6 +1756,7 @@ const CreateTeamForm: NextPage = () => {
                     <li>• 所有隊員已收到 Discord 組隊通知</li>
                     <li>• 請定期關注 Discord 頻道的通知和活動</li>
                     <li>• 如需了解組隊規則和計分方式，請查看 <a href="/team/rules" className="text-cyan-400 hover:text-cyan-300 underline">組隊規則</a></li>
+                    <li>• 如有任何疑問在 Discord 頻道 Tag「管家 | SDD.tw」</li>
                   </ul>
                 </div>
 
@@ -1622,7 +1935,7 @@ const CreateTeamForm: NextPage = () => {
 
                   {/* 下一步 / 提交按鈕 */}
                   <div className="ml-auto">
-                    {currentStep < 4 ? (
+                    {currentStep < 5 ? (
                       <button
                         type="button"
                         onClick={handleNext}
