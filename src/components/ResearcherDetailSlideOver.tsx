@@ -168,12 +168,41 @@ const ResearcherDetailSlideOver = ({ isOpen, onClose, researcher }: ResearcherDe
                   </p>
                 </div>
               </div>
-              <button
-                onClick={onClose}
-                className="p-2 rounded-lg hover:bg-gray-700/50 transition-colors"
-              >
-                <X className="w-6 h-6 text-gray-400 hover:text-white" />
-              </button>
+              
+              <div className="flex items-center gap-6">
+                {/* 新手任務按鈕 - 只對新手成員顯示 */}
+                {researcher['身份組'] === '新手成員' && (
+                  researcher['是否有提交新手任務'] === '是' ? (
+                    // 已完成狀態
+                    <button
+                      disabled
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-600 text-gray-300 text-sm font-semibold rounded-full border-2 border-gray-500 cursor-not-allowed opacity-70"
+                    >
+                      <span>✅</span>
+                      <span>已完成</span>
+                    </button>
+                  ) : (
+                    // 未完成狀態 - 可點擊
+                    <a
+                      href="https://docs.google.com/forms/d/e/1FAIpQLSe9fowV36Mrcsielc03wRPfxkfoRgrGlnl3Ag700icO9wfqNQ/viewform"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-500 text-white text-sm font-semibold rounded-full border-2 border-yellow-400 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-yellow-500/50 animate-pulse-glow relative"
+                    >
+                      <span>✨</span>
+                      <span>完成新手任務</span>
+                    </a>
+                  )
+                )}
+                
+                {/* 關閉按鈕 */}
+                <button
+                  onClick={onClose}
+                  className="p-2 rounded-lg hover:bg-gray-700/50 transition-colors"
+                >
+                  <X className="w-6 h-6 text-gray-400 hover:text-white" />
+                </button>
+              </div>
             </div>
 
             {/* Content */}

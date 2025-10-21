@@ -13,12 +13,15 @@ export async function fetchSheetData<T extends Record<string, any>>(range: strin
       throw new Error("GOOGLE_API_KEY is not defined in environment variables.");
     }
 
+    const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+    if (!spreadsheetId) {
+      throw new Error("GOOGLE_SHEETS_SPREADSHEET_ID is not defined in environment variables.");
+    }
+
     const sheets = google.sheets({
       version: 'v4',
       auth: apiKey,
     });
-
-    const spreadsheetId = '1S2EBpF5VtxuYTSBntOvg1ZrEVF_dAgcN8KLLPDh4aSw';
 
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
