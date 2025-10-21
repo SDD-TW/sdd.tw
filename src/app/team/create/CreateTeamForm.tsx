@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
@@ -56,9 +56,18 @@ interface Notification {
   show: boolean;
 }
 
+interface SubmissionResult {
+  teamId: string;
+  teamName: string;
+  evaluationDate: string;
+  captainName: string;
+  members: { discordName: string; discordId: string }[];
+}
+
 const CreateTeamForm: NextPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [notification, setNotification] = useState<Notification | null>(null);
+  const [submissionResult, setSubmissionResult] = useState<SubmissionResult | null>(null);
   const [formData, setFormData] = useState<FormData>({
     teamName: '',
     teamDescription: '',
@@ -80,6 +89,7 @@ const CreateTeamForm: NextPage = () => {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [progress, setProgress] = useState(0); // 進度條 0-100
   const [isCheckingTeamName, setIsCheckingTeamName] = useState(false);
   const [isCheckingMembers, setIsCheckingMembers] = useState(false);
   const [isLookingUpMember, setIsLookingUpMember] = useState(false);
@@ -88,6 +98,18 @@ const CreateTeamForm: NextPage = () => {
     available: boolean | null;
     message: string;
   }>({ available: null, message: '' });
+  
+  // 用於儲存進度條計時器的 ref
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // 清理進度條計時器
+  useEffect(() => {
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+      }
+    };
+  }, []);
   
   // 成員資料狀態（member 2-6）
   const [memberData, setMemberData] = useState<{
@@ -300,7 +322,7 @@ const CreateTeamForm: NextPage = () => {
         // 未找到成員
         setErrors((prev) => ({
           ...prev,
-          captainGithubUsername: data.error || '此 GitHub Username 不在 CSA 成員名單中',
+          captainGithubUsername: data.error || '查無資料，請確認是否已申請入會。',
         }));
         setCaptainDataAutoFilled(false);
         
@@ -355,7 +377,7 @@ const CreateTeamForm: NextPage = () => {
         if (data.data.discordId === formData.member1DiscordId) {
           setErrors((prev) => ({
             ...prev,
-            [`member${memberNum}Email`]: '此成員就是隊長本人，不能重複加入',
+            [`member${memberNum}Email`]: '請輸入正確的隊員資訊。',
           }));
           setMemberData((prev) => ({ ...prev, [memberKey]: null }));
           setFormData((prev) => ({ ...prev, [`member${memberNum}DiscordId`]: '' }));
@@ -379,7 +401,7 @@ const CreateTeamForm: NextPage = () => {
           // 已有待審核申請，拒絕加入
           setErrors((prev) => ({
             ...prev,
-            [`member${memberNum}Email`]: '該組員已經有在等待審核加入隊伍申請了',
+            [`member${memberNum}Email`]: '請輸入正確的隊員資訊。',
           }));
           setMemberData((prev) => ({ ...prev, [memberKey]: null }));
           setFormData((prev) => ({ ...prev, [`member${memberNum}DiscordId`]: '' }));
@@ -414,7 +436,7 @@ const CreateTeamForm: NextPage = () => {
         // 未找到成員
         setErrors((prev) => ({
           ...prev,
-          [`member${memberNum}Email`]: data.error || '此 Email 不在 CSA 成員名單中',
+          [`member${memberNum}Email`]: data.error || '請輸入正確的隊員資訊。',
         }));
         setMemberData((prev) => ({ ...prev, [memberKey]: null }));
         setFormData((prev) => ({ ...prev, [`member${memberNum}DiscordId`]: '' }));
@@ -612,6 +634,45 @@ const CreateTeamForm: NextPage = () => {
     setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
   };
 
+  // 模擬進度條增長（非線性，逐漸變慢，最後卡在 99%）
+  const startProgressSimulation = () => {
+    setProgress(0);
+    
+    let currentProgress = 0;
+    const startTime = Date.now();
+    
+    progressIntervalRef.current = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      
+      // 非線性進度算法
+      // 前 2 秒：0% -> 70%
+      // 接下來 3 秒：70% -> 90%
+      // 再接下來 5 秒：90% -> 99%
+      // 最後卡在 99%
+      
+      if (elapsed < 2000) {
+        currentProgress = Math.floor((elapsed / 2000) * 70);
+      } else if (elapsed < 5000) {
+        currentProgress = 70 + Math.floor(((elapsed - 2000) / 3000) * 20);
+      } else if (elapsed < 10000) {
+        currentProgress = 90 + Math.floor(((elapsed - 5000) / 5000) * 9);
+      } else {
+        currentProgress = 99; // 卡在 99%
+      }
+      
+      setProgress(Math.min(currentProgress, 99));
+    }, 100); // 每 100ms 更新一次
+  };
+  
+  // 停止進度模擬並完成到 100%
+  const completeProgress = () => {
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current);
+      progressIntervalRef.current = null;
+    }
+    setProgress(100);
+  };
+
   // 上一步
   const handlePrevious = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
@@ -631,6 +692,7 @@ const CreateTeamForm: NextPage = () => {
     }
 
     setIsSubmitting(true);
+    startProgressSimulation(); // 啟動進度條模擬
 
     try {
       const response = await fetch('/api/team/create', {
@@ -657,16 +719,44 @@ const CreateTeamForm: NextPage = () => {
       const result = await response.json();
 
       if (result.success) {
-        // 成功 - 顯示成功動畫和訊息
-        showNotification('success', '🎉 隊伍創建成功！' + (result.message ? '\n' + result.message : ''), 3000);
-        // 延遲跳轉，讓用戶看到成功訊息
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 3000);
+        // 成功 - 完成進度到 100%
+        completeProgress();
+        
+        // 收集成員資訊並顯示成功頁面
+        const members: { discordName: string; discordId: string }[] = [];
+        
+        // 隊長（成員1）
+        members.push({
+          discordName: formData.captainNickname,
+          discordId: formData.member1DiscordId,
+        });
+        
+        // 其他成員
+        ['member2', 'member3', 'member4', 'member5', 'member6'].forEach((key) => {
+          const data = memberData[key];
+          if (data) {
+            members.push({
+              discordName: data.discordName,
+              discordId: data.discordId,
+            });
+          }
+        });
+
+        setSubmissionResult({
+          teamId: result.teamId || '',
+          teamName: formData.teamName,
+          evaluationDate: result.evaluationDate || '',
+          captainName: formData.captainNickname,
+          members,
+        });
       } else {
+        // 失敗 - 停止進度並重置
+        completeProgress();
         showNotification('error', '提交失敗：' + (result.error || '未知錯誤'));
       }
     } catch (error) {
+      // 錯誤 - 停止進度並重置
+      completeProgress();
       console.error('提交錯誤:', error);
       showNotification('error', '網路錯誤，請稍後再試');
     } finally {
@@ -1075,6 +1165,61 @@ const CreateTeamForm: NextPage = () => {
       (formData.member5DiscordId ? 1 : 0) +
       (formData.member6DiscordId ? 1 : 0);
 
+    // 如果正在提交，顯示載入動畫
+    if (isSubmitting) {
+      return (
+        <div className="space-y-6 animate-fadeIn">
+          <div className="text-center py-16">
+            <div className="flex flex-col items-center space-y-6">
+              {/* 旋轉的隊伍圖標 */}
+              <div className="relative">
+                <div className="w-24 h-24 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
+                <div className="absolute inset-0 flex items-center justify-center text-4xl">
+                  👥
+                </div>
+              </div>
+              
+              {/* 載入文字 */}
+              <div className="space-y-2">
+                <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                  正在創建你的隊伍...
+                </h3>
+                <p className="text-gray-400">請稍候，我們正在處理您的申請</p>
+                <p className="text-sm text-gray-500">
+                  正在驗證資料、寫入記錄、發送通知...
+                </p>
+              </div>
+
+              {/* 進度條動畫 - 顯示實際進度 */}
+              <div className="w-full max-w-md space-y-2">
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-gray-400">處理進度</span>
+                  <span className={`font-bold ${progress >= 99 ? 'text-yellow-400' : 'text-cyan-400'}`}>
+                    {progress}%
+                  </span>
+                </div>
+                <div className="w-full h-3 bg-gray-700 rounded-full overflow-hidden shadow-inner">
+                  <div 
+                    className={`h-full transition-all duration-300 ease-out ${
+                      progress >= 99 
+                        ? 'bg-gradient-to-r from-yellow-500 to-orange-500' 
+                        : 'bg-gradient-to-r from-cyan-500 to-blue-500'
+                    }`}
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+                {progress >= 99 && (
+                  <p className="text-xs text-yellow-400 animate-pulse text-center">
+                    正在完成最後步驟...
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="space-y-6 animate-fadeIn">
         <div className="text-center mb-8">
@@ -1202,6 +1347,135 @@ const CreateTeamForm: NextPage = () => {
         return null;
     }
   };
+
+  // 渲染成功頁面
+  const renderSuccessPage = () => {
+    if (!submissionResult) return null;
+
+    return (
+      <div className="min-h-screen grid-bg relative">
+        {/* 動畫背景 */}
+        <AnimatedBackground />
+
+        {/* Hero 背景效果 */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-green-900/20 to-transparent" />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-green-600/30 rounded-full blur-[120px] animate-pulse" />
+        </div>
+
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Navbar />
+          
+          <main className="flex-1 flex items-center justify-center px-4 py-12">
+            <div className="max-w-3xl w-full animate-fadeIn">
+              {/* 成功圖標 */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full shadow-[0_0_40px_rgba(34,197,94,0.6)] mb-6 animate-scaleIn">
+                  <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 mb-4">
+                  🎉 組隊成功！
+                </h1>
+                <p className="text-xl text-gray-300">
+                  恭喜你的隊伍已成功建立！
+                </p>
+              </div>
+
+              {/* 隊伍資訊卡片 */}
+              <div className="bg-gray-900/60 backdrop-blur-md border-2 border-green-500/50 rounded-2xl p-8 shadow-[0_0_30px_rgba(34,197,94,0.3)] space-y-6">
+                {/* 隊伍名稱 */}
+                <div className="text-center pb-6 border-b border-gray-700">
+                  <h2 className="text-3xl font-bold text-white mb-2">{submissionResult.teamName}</h2>
+                  <p className="text-gray-400 text-sm">Team ID: {submissionResult.teamId}</p>
+                </div>
+
+                {/* 隊長資訊 */}
+                <div>
+                  <h3 className="text-lg font-semibold text-green-400 mb-3 flex items-center gap-2">
+                    <span>👑</span>
+                    <span>隊長</span>
+                  </h3>
+                  <div className="bg-gray-800/50 rounded-lg p-4">
+                    <p className="text-white font-medium">{submissionResult.captainName}</p>
+                  </div>
+                </div>
+
+                {/* 隊員資訊 */}
+                <div>
+                  <h3 className="text-lg font-semibold text-cyan-400 mb-3 flex items-center gap-2">
+                    <span>👥</span>
+                    <span>隊員（共 {submissionResult.members.length} 人）</span>
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {submissionResult.members.map((member, index) => (
+                      <div key={index} className="bg-gray-800/50 rounded-lg p-3">
+                        <p className="text-white text-sm">{member.discordName}</p>
+                        <p className="text-gray-400 text-xs font-mono mt-1">ID: {member.discordId.slice(0, 4)}****{member.discordId.slice(-4)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 評鑑日期 */}
+                <div className="bg-gradient-to-r from-purple-900/50 to-blue-900/50 rounded-lg p-6 border border-purple-500/30">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm mb-1">📅 隊伍評鑑日期</p>
+                      <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+                        {submissionResult.evaluationDate}
+                      </p>
+                    </div>
+                    <div className="text-4xl">⏰</div>
+                  </div>
+                  <p className="text-gray-400 text-sm mt-3">
+                    請在評鑑日期前完成學習任務，我們會在 Discord 頻道發送提醒通知
+                  </p>
+                </div>
+
+                {/* 重要提示 */}
+                <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
+                  <h4 className="text-yellow-400 font-semibold mb-2 flex items-center gap-2">
+                    <span>⚡</span>
+                    <span>重要提示</span>
+                  </h4>
+                  <ul className="text-gray-300 text-sm space-y-2">
+                    <li>• 所有隊員已收到 Discord 組隊通知</li>
+                    <li>• 請定期關注 Discord 頻道的通知和活動</li>
+                    <li>• 如需了解組隊規則和計分方式，請查看 <a href="/team/rules" className="text-cyan-400 hover:text-cyan-300 underline">組隊規則</a></li>
+                  </ul>
+                </div>
+
+                {/* CTA 按鈕 */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <a
+                    href="/rank"
+                    className="flex-1 px-6 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold rounded-lg text-center transition-all duration-200 shadow-[0_0_20px_rgba(6,182,212,0.5)] hover:shadow-[0_0_30px_rgba(6,182,212,0.7)] transform hover:scale-105"
+                  >
+                    查看貢獻榜 🏆
+                  </a>
+                  <a
+                    href="/team/rules"
+                    className="flex-1 px-6 py-4 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-lg text-center transition-all duration-200 border-2 border-gray-600 hover:border-cyan-500"
+                  >
+                    了解組隊規則 📖
+                  </a>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <Footer />
+        </div>
+      </div>
+    );
+  };
+
+  // 如果提交成功，顯示成功頁面
+  if (submissionResult) {
+    return renderSuccessPage();
+  }
 
   return (
     <div className="min-h-screen grid-bg relative">

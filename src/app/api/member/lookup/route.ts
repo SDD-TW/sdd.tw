@@ -46,12 +46,9 @@ export async function POST(request: NextRequest) {
     }
 
     if (!member) {
-      const errorMessage = githubUsername
-        ? '此 GitHub Username 不在 CSA 成員名單中'
-        : '此 Email 不在 CSA 成員名單中';
       return NextResponse.json({
         found: false,
-        error: errorMessage,
+        error: '查無資料，請確認是否已申請入會。',
       });
     }
 
@@ -59,8 +56,8 @@ export async function POST(request: NextRequest) {
     const validRoles = ['正式成員', '課金玩家'];
     if (!validRoles.includes(member['身份組'])) {
       const errorMessage = githubUsername
-        ? '你還不是研究組織的正式成員或課金玩家，請先完成新手任務'
-        : '此成員還不是研究組織的正式成員或課金玩家，無法加入隊伍';
+        ? '尚未完成入會任務，隊長目前限定課金玩家及正式成員才能創建團隊。'
+        : '此成員尚未完成入會任務無法擔任成員，請替換成員資料。';
       return NextResponse.json({
         found: false,
         error: errorMessage,
