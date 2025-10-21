@@ -32,7 +32,7 @@ const TeamRulesClient = () => {
                 📖 組隊規則
               </h1>
               <p className="text-xl text-gray-300">
-                了解組隊相關規則、計分方式與隊伍管理
+                創建你的隊伍與他人結伴一起探索最前沿的 SDD os 技術
               </p>
             </div>
 

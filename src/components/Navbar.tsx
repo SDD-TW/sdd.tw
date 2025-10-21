@@ -28,7 +28,7 @@ const Navbar = () => {
     { name: '方法論', href: '/#methodology' },
     { name: '技術', href: '/#technology' },
     { name: '貢獻榜', href: '/rank' },
-    { name: '創建隊伍', href: '/team/create' }
+    { name: '組隊規則', href: '/team/rules' }
   ];
 
   return (
