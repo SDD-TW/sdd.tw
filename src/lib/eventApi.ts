@@ -276,11 +276,13 @@ export async function createTeamMemberJoinedEvent(
  * 批次創建所有成員的 TEAM_MEMBER_JOINED 事件
  * 
  * @param teamId - Team ID
+ * @param teamName - 隊伍名稱
  * @param members - 所有成員資料（包含隊長）
  * @returns 成功寫入的事件數量
  */
 export async function createAllMemberJoinedEvents(
   teamId: string,
+  teamName: string,
   members: TeamMemberData[]
 ): Promise<{
   total: number;
@@ -295,7 +297,8 @@ export async function createAllMemberJoinedEvents(
   let failedCount = 0;
 
   for (const member of members) {
-    const result = await createTeamMemberJoinedEvent(teamId, member);
+    const note = `加入隊伍: ${teamName}`;
+    const result = await createTeamMemberJoinedEvent(teamId, member, note);
     results.push(result);
 
     if (result && result.success) {

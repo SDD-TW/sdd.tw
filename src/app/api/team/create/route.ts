@@ -165,6 +165,7 @@ export async function POST(request: NextRequest) {
 
     const memberJoinedResults = await createAllMemberJoinedEvents(
       teamId,
+      body.teamName,
       allMembers
     );
 
