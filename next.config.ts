@@ -55,6 +55,23 @@ const nextConfig: NextConfig = {
     ];
   },
   
+  // 301 重定向：www.sdd.tw -> sdd.tw
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.sdd.tw',
+          },
+        ],
+        destination: 'https://sdd.tw/:path*',
+        permanent: true, // 301 永久重定向
+      },
+    ];
+  },
+  
   // 確保 sitemap 可以被正確訪問
   async headers() {
     return [
