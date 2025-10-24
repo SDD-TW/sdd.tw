@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   <url>
     <loc>${baseUrl}/</loc>
     <lastmod>${now}</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
