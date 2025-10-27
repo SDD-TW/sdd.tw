@@ -1,4 +1,5 @@
 import { getCrmData, CrmRecord } from '@/lib/crm';
+import { Metadata } from 'next';
 import { Users, Star } from 'lucide-react';
 import GithubAvatar from '@/components/GithubAvatar';
 import SpecAnalysisAnimation from '@/components/SpecAnalysisAnimation'; // Import the new animation
@@ -7,6 +8,12 @@ import { Suspense } from 'react';
 import ClientWrapper from './ClientWrapper';
 import ResearcherList from '@/components/ResearcherList';
 import PRMasonryWall from '@/components/PRMasonryWall';
+
+export const metadata: Metadata = {
+  title: '技術貢獻榜 - 臺灣規格驅動開發',
+  description: '查看 SDD 社群成員的技術貢獻和排名。了解研究員的 GitHub PR 貢獻、活躍度統計，以及社群成員的成長軌跡。',
+  keywords: ['SDD', '技術貢獻榜', 'GitHub PR', '社群排名', '研究員', '貢獻度'],
+};
 
 const Section = ({ children, className }: { children: React.ReactNode, className?: string }) => (
   <section className={`py-20 sm:py-32 ${className}`}>

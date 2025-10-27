@@ -56,21 +56,36 @@ const nextConfig: NextConfig = {
   },
   
   // 301 重定向：www.sdd.tw -> sdd.tw
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.sdd.tw',
-          },
-        ],
-        destination: 'https://sdd.tw/:path*',
-        permanent: true, // 301 永久重定向
-      },
-    ];
-  },
+  // 
+  // ✅ 選項 A：在 Zeabur Dashboard 配置（當前方案）
+  // 
+  // 重定向已移至 Zeabur Dashboard 平台層面配置：
+  // 1. 登入 https://dash.zeabur.com
+  // 2. 選擇 "sdd-tw" 專案
+  // 3. 進入「域名」設定
+  // 4. 找到 "www.sdd.tw" 並設定為「重定向到主域名」
+  //
+  // 優點：
+  // - 在平台層面處理，更有效率
+  // - 避免 Next.js 層面和平台層面的重定向衝突
+  // - 符合最佳實踐
+  //
+  // 如果需要恢復 Next.js 重定向，取消下面註釋：
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/(.*)',
+  //       has: [
+  //         {
+  //           type: 'host',
+  //           value: 'www.sdd.tw',
+  //         },
+  //       ],
+  //       destination: 'https://sdd.tw/$1',
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
   
   // 確保 sitemap 可以被正確訪問
   async headers() {
