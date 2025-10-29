@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -16,6 +16,17 @@ import FormStep1 from '@/components/onboarding/FormStep1';
 import FormStep2 from '@/components/onboarding/FormStep2';
 import FormStep3 from '@/components/onboarding/FormStep3';
 import FormStep4 from '@/components/onboarding/FormStep4';
+import {
+  getOrCreateSessionId,
+  loadProgress,
+  saveProgress,
+  trackSessionStart,
+  trackStepChange,
+  trackPageLeave,
+  trackFormSubmit,
+  updateLastActive,
+  flushPendingEventsForSession,
+} from '@/lib/userTracking';
 
 // 使用 dynamic import 來避免 SSR 問題
 const AnimatedBackground = dynamic(() => import('@/components/AnimatedBackground'), {
@@ -60,12 +71,8 @@ const OnboardingForm = () => {
   }, []);
 
   // Session ID for tracking
-  const [sessionId] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    }
-    return '';
-  });
+  const [sessionId, setSessionId] = useState<string>('');
+  const [hasRestored, setHasRestored] = useState(false);
 
   // 步驟標題
   const stepTitles = {
@@ -83,53 +90,108 @@ const OnboardingForm = () => {
   };
 
 
-  // 追蹤事件
-  const trackEvent = useCallback(async (eventType: string, step: number, maxStep: number) => {
-    try {
-      // TODO: 實作追蹤 API
-      const trackingData = {
-        sessionId,
-        timestamp: new Date().toISOString(),
-        email: formData.email || undefined,
-        eventType,
-        currentStep: step,
-        maxStep,
-        validationErrors: Object.keys(errors).length > 0 ? errors : undefined,
-        deviceType: getDeviceType(),
-        browser: getBrowserInfo(),
-        completed: formData.confirmation,
-      };
+
+  // 初始化 Session ID 和狀態恢復
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // 1. 生成或取得 Session ID
+    const newSessionId = getOrCreateSessionId();
+    setSessionId(newSessionId);
+
+    // 2. 嘗試恢復之前保存的進度
+    const savedProgress = loadProgress(newSessionId);
+    
+    if (savedProgress && !hasRestored) {
+      // 恢復表單資料（確保包含所有必要欄位）
+      setFormData({
+        email: savedProgress.formData.email || '',
+        nickname: savedProgress.formData.nickname || '',
+        discordId: savedProgress.formData.discordId || '',
+        githubUsername: savedProgress.formData.githubUsername || '',
+        accupassEmail: savedProgress.formData.accupassEmail || '',
+        completedTasks: savedProgress.formData.completedTasks || {
+          fbPage: false,
+          threads: false,
+          fbGroup: false,
+          lineOfficial: false,
+          discordConfirm: false,
+        },
+        confirmation: savedProgress.formData.confirmation || false,
+      });
+      setCurrentStep(savedProgress.currentStep as FormStep);
       
-      console.log('Track event:', trackingData);
-      // await fetch('/api/tracking/log', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(trackingData),
-      // });
-    } catch (error) {
-      console.error('Tracking error:', error);
+      // 顯示恢復提示
+      showNotification('success', '歡迎回來，已為您恢復填寫進度');
+      
+      setHasRestored(true);
+      
+      console.log('[Tracking] Progress restored:', savedProgress);
+    } else if (!hasRestored) {
+      // 3. 記錄 session_start 事件（首次訪問）
+      setHasRestored(true); // 標記為已處理，避免重複記錄
+      // 使用初始表單資料記錄 session_start
+      const initialFormData: OnboardingFormData = {
+        email: '',
+        nickname: '',
+        discordId: '',
+        githubUsername: '',
+        accupassEmail: '',
+        completedTasks: {
+          fbPage: false,
+          threads: false,
+          fbGroup: false,
+          lineOfficial: false,
+          discordConfirm: false,
+        },
+        confirmation: false,
+      };
+      // Fire and forget - 不阻塞頁面載入
+      trackSessionStart(newSessionId, 1, initialFormData).catch(console.error);
+      saveProgress(newSessionId, 1, 'in_progress', initialFormData);
     }
-  }, [sessionId, formData.email, formData.confirmation, errors]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // 只在組件掛載時執行一次
 
-  // 追蹤頁面進入事件
+  // 追蹤離開事件（使用新的追蹤系統）
   useEffect(() => {
-    if (typeof window !== 'undefined' && sessionId) {
-      trackEvent('進入報名頁面', 1, 1);
-    }
-  }, [sessionId, trackEvent]);
+    if (!sessionId) return;
 
-  // 追蹤離開事件
-  useEffect(() => {
     const handleBeforeUnload = () => {
-      if (!formData.confirmation) {
-        trackEvent('中途離開', currentStep, Math.max(...[1, 2, 3, 4].filter(s => s <= currentStep)));
+      // page_leave 需要立即同步，但 beforeunload 不支援 async
+      // 使用 sendBeacon 或同步請求確保資料被送出
+      trackPageLeave(sessionId, currentStep, formData, 'close').catch(console.error);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        updateLastActive(sessionId);
+      } else if (document.visibilityState === 'visible') {
+        // 頁面重新可見時，同步待處理的事件
+        // 這確保用戶切換標籤回來時，未同步的事件會被送出
+        flushPendingEventsForSession(sessionId).catch(console.error);
       }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [currentStep, formData.confirmation, trackEvent]);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [sessionId, currentStep, formData]);
+
+  // 自動儲存進度（當表單資料變更時）
+  useEffect(() => {
+    if (!sessionId || !hasRestored) return; // 等待恢復完成後才開始自動儲存
+
+    const status = formData.confirmation ? 'completed' : 'in_progress';
+    saveProgress(sessionId, currentStep, status, formData);
+  }, [sessionId, currentStep, formData, hasRestored]);
+
+  // 保留這些函數供未來使用（例如 Supabase 同步時）
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getDeviceType = (): string => {
     if (typeof window === 'undefined') return 'unknown';
     const width = window.innerWidth;
@@ -138,6 +200,7 @@ const OnboardingForm = () => {
     return 'desktop';
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getBrowserInfo = (): string => {
     if (typeof window === 'undefined') return 'unknown';
     const ua = window.navigator.userAgent;
@@ -197,21 +260,25 @@ const OnboardingForm = () => {
 
   // 處理步驟切換
   const handleNext = () => {
-    if (validateCurrentStep()) {
-      trackEvent(`離開步驟${currentStep}`, currentStep, currentStep);
+    if (validateCurrentStep() && sessionId) {
       const nextStep = (currentStep + 1) as FormStep;
+      // 記錄步驟變更事件（fire and forget）
+      trackStepChange(sessionId, currentStep, nextStep, formData).catch(console.error);
+      // 更新進度
+      saveProgress(sessionId, nextStep, 'in_progress', formData);
       setCurrentStep(nextStep);
-      trackEvent(`進入步驟${nextStep}`, nextStep, nextStep);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
   const handlePrevious = () => {
-    if (currentStep > 1) {
-      trackEvent(`離開步驟${currentStep}`, currentStep, currentStep);
+    if (currentStep > 1 && sessionId) {
       const prevStep = (currentStep - 1) as FormStep;
+      // 記錄步驟變更事件（fire and forget）
+      trackStepChange(sessionId, currentStep, prevStep, formData).catch(console.error);
+      // 更新進度
+      saveProgress(sessionId, prevStep, 'in_progress', formData);
       setCurrentStep(prevStep);
-      trackEvent(`進入步驟${prevStep}`, prevStep, currentStep);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -267,11 +334,14 @@ const OnboardingForm = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
     try {
-      // TODO: 實作提交 API
+      // 提交表單（包含 sessionId 用於追蹤）
       const response = await fetch('/api/onboarding/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          sessionId, // 將 sessionId 一起傳送
+        }),
       });
 
       const result = await response.json();
@@ -280,7 +350,11 @@ const OnboardingForm = () => {
         // 成功 - 完成進度到 100%
         completeProgress();
         
-        trackEvent('提交成功', 4, 4);
+        // 記錄表單提交成功事件（fire and forget）
+        if (sessionId) {
+          trackFormSubmit(sessionId, currentStep, formData, 'success').catch(console.error);
+        }
+        
         showNotification('success', '報名成功！正在跳轉...');
         
         // 跳轉到成功頁面
@@ -303,7 +377,11 @@ const OnboardingForm = () => {
       }
       setProgress(0);
       
-      trackEvent('提交失敗', 4, 4);
+      // 記錄表單提交失敗事件（fire and forget）
+      if (sessionId) {
+        trackFormSubmit(sessionId, currentStep, formData, 'error').catch(console.error);
+      }
+      
       showNotification('error', error instanceof Error ? error.message : '提交失敗，請稍後再試');
       setIsSubmitting(false);
     }
