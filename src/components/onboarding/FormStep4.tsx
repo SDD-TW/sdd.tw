@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { OnboardingFormData, FormErrors } from '@/types/onboarding';
 import { Edit2, CheckCircle, XCircle } from 'lucide-react';
 import Image from 'next/image';
@@ -19,6 +20,11 @@ const FormStep4 = ({
   githubAvatarUrl,
   onEditStep,
 }: FormStep4Props) => {
+  // 進入第四步時滾動到頁面頂部
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* 資訊摘要 */}
@@ -42,7 +48,7 @@ const FormStep4 = ({
               <span className="text-white">{formData.email}</span>
             </div>
             <div className="flex items-start">
-              <span className="text-gray-400 w-32 flex-shrink-0">暱稱:</span>
+              <span className="text-gray-400 w-32 flex-shrink-0">Discord Name:</span>
               <span className="text-white">{formData.nickname}</span>
             </div>
             <div className="flex items-start">
@@ -221,7 +227,7 @@ const FormStep4 = ({
           </div>
           <div>
             <p className={`font-medium ${errors.confirmation ? 'text-red-500' : 'text-white'}`}>
-              我確認以上資訊正確，並同意相關條款 <span className="text-red-500">*</span>
+              我確認以上資訊正確
             </p>
             <p className="text-sm text-gray-400 mt-1">
               提交後，管理員將在 1-2 個工作天內審核並分配身份組

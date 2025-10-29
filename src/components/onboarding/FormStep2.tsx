@@ -102,7 +102,7 @@ const FormStep2 = ({
   return (
     <div className="space-y-6">
       {/* 步驟說明 */}
-      <div className="p-4 rounded-lg" style={{ backgroundColor: '#012d30', borderColor: '#03f0ff', borderWidth: '2px', borderStyle: 'solid' }}>
+      {/* <div className="p-4 rounded-lg" style={{ backgroundColor: '#012d30', borderColor: '#03f0ff', borderWidth: '2px', borderStyle: 'solid' }}>
         <div className="flex items-start space-x-3">
           <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
             <span className="text-white text-lg">🔐</span>
@@ -114,7 +114,7 @@ const FormStep2 = ({
                 完成綁定後，你將獲得：
               </p>
               <ul className="space-y-1 text-xs ml-4">
-                <li>• <span className="text-purple-400 font-medium">Sdd.os 平台存取權限</span>：加入我們的開發平台，使用專業工具</li>
+                <li>• <span className="text-purple-400 font-medium">SDD.os 平台存取權限</span>：加入我們的開發平台，使用專業工具</li>
                 <li>• <span className="text-blue-400 font-medium">學習獎勵發送</span>：完成任務後透過這些平台接收獎勵</li>
                 <li>• <span className="text-green-400 font-medium">專屬學習資源</span>：獲得相應的課程和資料存取權限</li>
                 <li>• <span className="text-yellow-400 font-medium">身份安全保障</span>：防止重複報名，確保你的權益</li>
@@ -122,7 +122,7 @@ const FormStep2 = ({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* GitHub Username */}
       <div>
@@ -281,8 +281,8 @@ const FormStep2 = ({
               <h4 className="text-white font-medium mb-2">Accupass Email 說明</h4>
               <div className="text-sm text-gray-300 space-y-2">
                 <p>
-                  若你有購買水球的課程 - <span className="text-orange-400 font-semibold">「AI x BDD : 規格驅動全自動開發術」</span>，
-                  請填寫你購買時的 Email，以協助核對身份。
+                  若你有參與一日工作坊 - <span className="text-orange-400 font-semibold">「AI 時代的 1% 工程師」</span>，
+                  請填寫購買時 Accupass 的 Email，以協助核對身份。
                 </p>
                 <p>
                   若沒有參加此課程，則填寫「無」即可。

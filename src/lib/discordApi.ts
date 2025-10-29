@@ -207,7 +207,7 @@ export interface NonPaidMemberWelcomeData {
 }
 
 /**
- * Discord 伺服器和身份組 ID 定義
+ * Discord 社群和身份組 ID 定義
  */
 export const DISCORD_GUILD_ID = '1295275227848249364'; // SDD 伺服器 ID
 

@@ -131,7 +131,7 @@ const SuccessView = () => {
       number: 3,
       icon: BookOpen,
       title: '開始參與開源專案',
-      description: '接受邀請後，你將擁有 triage 權限，可以開始參與 sdd.os 專案開發',
+      description: '接受邀請後，你將擁有 triage 權限，可以開始參與 SDD.os 專案開發',
       status: 'pending' as const,
     },
     {
@@ -152,7 +152,7 @@ const SuccessView = () => {
     {
       number: 1,
       icon: MessageCircle,
-      title: '加入 Discord 伺服器',
+      title: '加入 Discord 社群',
       description: '點擊下方按鈕加入我們的 Discord 社群，與其他成員交流學習',
       status: 'completed' as const,
     },
@@ -167,7 +167,7 @@ const SuccessView = () => {
       number: 3,
       icon: UserPlus,
       title: '成為正式成員',
-      description: '完成新手任務後，成為臺灣規格驅動開發社群的正式成員，獲得 Sdd.os repo 權限，一起為社群貢獻',
+      description: '完成新手任務後，成為臺灣規格驅動開發社群的正式成員，獲得 SDD.os repo 權限，一起為社群貢獻',
       status: 'pending' as const,
     },
     {
@@ -378,14 +378,14 @@ const SuccessView = () => {
                                 與其他開發者一起推動全自動化開發的實踐！
                               </p>
                               <p className="text-green-200 text-xs">
-                                完成任務後，你將獲得 <span className="font-bold text-blue-300">Sdd.os repo 權限</span>，
-                                可以使用這個開源專案來學習和優化 SDD 技術。
+                                完成任務，你將獲得免費存取完整全自動規格驅動開發的原始碼權限，可以使用這個 repo 來學習和優化SDD技術。
+                               
                               </p>
                             </div>
                             <div className="bg-purple-900/20 border border-purple-500/30 rounded-lg p-3">
                               <p className="text-purple-300 text-sm font-medium mb-1">💎 正式成員專屬權益</p>
                               <div className="text-purple-200 text-xs space-y-1">
-                                <p>• 獲得 Sdd.os GitHub repo 協作權限</p>
+                                <p>• 獲得 SDD.os GitHub repo 協作權限</p>
                                 <p>• 參與內部技術討論和 Code Review</p>
                                 <p>• 優先參與讀書會和分享會</p>
                                 <p>• 獲得專屬新手獎勵 Prompt</p>

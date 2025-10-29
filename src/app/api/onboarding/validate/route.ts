@@ -78,7 +78,7 @@ async function validateEmail(email: string) {
     if (existingRecord) {
       return NextResponse.json({
         valid: false,
-        error: '此 Email 已經報名過，請使用其他 Email 或聯繫管理員',
+        error: '此 E-mail 已經使用過，請確認 E-mail 或聯繫管家人員。',
       });
     }
 

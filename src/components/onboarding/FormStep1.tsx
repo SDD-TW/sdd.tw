@@ -158,10 +158,10 @@ const FormStep1 = ({
         )}
       </div>
 
-      {/* 暱稱/Discord 名稱 */}
+      {/* Discord Name */}
       <div>
         <label className="block text-white font-medium mb-2">
-          暱稱/Discord 名稱 <span className="text-red-500">*</span>
+          Discord Name <span className="text-red-500">*</span>
         </label>
         <div className="relative">
           <input
@@ -173,7 +173,7 @@ const FormStep1 = ({
                 setFormData({ ...formData, nickname: value });
               }
             }}
-            placeholder="例如：Waterball"
+            placeholder="請從 Discord Profile 複製你的名稱"
             maxLength={50}
             className={`w-full px-4 py-3 bg-gray-800/80 border-2 rounded-lg text-white placeholder-gray-500 focus:outline-none transition-all duration-200 ${
               errors.nickname
@@ -181,23 +181,53 @@ const FormStep1 = ({
                 : 'border-gray-700 focus:border-[#00F0FF] focus:shadow-[0_0_12px_#00F0FF]'
             }`}
           />
-          <div className="absolute right-4 bottom-[-24px] text-xs text-gray-500">
-            {formData.nickname.length} / 50
-          </div>
         </div>
         
-        {/* 暱稱說明 */}
-        <div className="mt-2 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-          <div className="flex items-start space-x-2">
-            <span className="text-green-400 text-sm">💡</span>
-            <div className="text-sm text-gray-300">
-              <p className="font-medium text-white mb-1">暱稱說明</p>
-              <p>這是你希望在社群中顯示的名稱，可以是：</p>
-              <ul className="mt-1 space-y-1 text-xs">
-                <li>• 你的 Discord 暱稱（如：Coomy）</li>
-                <li>• 你的 GitHub 用戶名</li>
-                <li>• 任何你喜歡的稱呼</li>
-              </ul>
+        {/* Discord Name 取得指引 */}
+        <div className="mt-3 p-4 bg-blue-500/10 border-2 border-blue-500/30 rounded-lg">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-sm font-bold">?</span>
+            </div>
+            <div className="flex-1">
+              <h4 className="text-white font-medium mb-2">如何取得 Discord Name？</h4>
+              <div className="space-y-2 text-sm text-gray-300">
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-400 font-bold">1.</span>
+                  <span>開啟 Discord 應用程式或網頁版</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-400 font-bold">2.</span>
+                  <span>點擊左下角你的 <strong className="text-white">頭像</strong></span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-400 font-bold">3.</span>
+                  <span>在個人資料頁面，找到 <strong className="text-white">Username</strong> 欄位</span>
+                </div>
+                <div className="flex items-start space-x-2">
+                  <span className="text-blue-400 font-bold">4.</span>
+                  <span>複製你的 Discord Name 並貼上到上方欄位</span>
+                </div>
+              </div>
+              
+              {/* 視覺化指引 */}
+              <div className="mt-3 p-3 bg-gray-800/50 rounded border border-gray-600">
+                <div className="mb-2">
+                  <img 
+                    src="/discord-profile-example.png" 
+                    alt="Discord Profile 範例" 
+                    className="w-full rounded border border-gray-600"
+                  />
+                  <div className="mt-2 text-xs text-gray-400 text-center">
+                    在個人資料頁面，找到主用戶名下方顯示的 <strong className="text-white">.coomy</strong>（紅色框標示處）
+                  </div>
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-600">
+                  <div className="text-xs text-gray-300">
+                    <strong className="text-white">Discord Name 就是：</strong>主用戶名下方顯示的文字（例如：<code className="bg-gray-900 px-1 py-0.5 rounded text-blue-300">.coomy</code>）
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -248,7 +278,7 @@ const FormStep1 = ({
                 </div>
                 <div className="flex items-start space-x-2">
                   <span className="text-blue-400 font-bold">2.</span>
-                  <span>點擊右上角設定（⚙️）→ 進階 → 開啟「開發者模式」</span>
+                  <span>點擊左下角設定（⚙️）→ 進階 → 開啟「開發者模式」</span>
                 </div>
                 <div className="flex items-start space-x-2">
                   <span className="text-blue-400 font-bold">3.</span>
@@ -297,6 +327,16 @@ const FormStep1 = ({
                   </div>
                 </div>
               </details>
+              
+              {/* 重要提醒 */}
+              <div className="mt-3 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded">
+                <div className="flex items-start space-x-2">
+                  <span className="text-yellow-400">⚠️</span>
+                  <div className="text-xs text-yellow-200">
+                    <strong className="text-yellow-300">請確保 ID 完全正確</strong>，否則無法收到 Discord 通知！
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
