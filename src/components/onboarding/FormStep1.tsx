@@ -173,7 +173,7 @@ const FormStep1 = ({
                 setFormData({ ...formData, nickname: value });
               }
             }}
-            placeholder="例如：Coomy"
+            placeholder="例如：Waterball"
             maxLength={50}
             className={`w-full px-4 py-3 bg-gray-800/80 border-2 rounded-lg text-white placeholder-gray-500 focus:outline-none transition-all duration-200 ${
               errors.nickname

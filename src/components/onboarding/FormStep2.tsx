@@ -134,7 +134,7 @@ const FormStep2 = ({
             type="text"
             value={formData.githubUsername}
             onChange={handleGithubUsernameChange}
-            placeholder="例如：coomychang"
+            placeholder="例如：waterballsa"
             className={`w-full px-4 py-3 bg-gray-800/80 border-2 rounded-lg text-white placeholder-gray-500 focus:outline-none transition-all duration-200 ${
               errors.githubUsername
                 ? 'border-red-500'
@@ -183,10 +183,10 @@ const FormStep2 = ({
                   </div>
                   <div className="flex-1">
                     <div className="text-white text-sm font-mono bg-gray-900 px-2 py-1 rounded">
-                      github.com/coomychang
+                      github.com/waterballsa
                     </div>
                     <div className="text-xs text-gray-400 mt-1">
-                      用戶名：coomychang（這就是你要填寫的）
+                      用戶名：waterballsa（這就是你要填寫的）
                     </div>
                   </div>
                 </div>

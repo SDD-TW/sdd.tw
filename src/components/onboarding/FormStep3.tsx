@@ -1,7 +1,7 @@
 'use client';
 
 import { OnboardingFormData, FormErrors } from '@/types/onboarding';
-import { Facebook, MessageCircle, Users, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 
 interface FormStep3Props {
   formData: OnboardingFormData;
@@ -73,7 +73,6 @@ const FormStep3 = ({ formData, setFormData, errors }: FormStep3Props) => {
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Facebook className="w-5 h-5 text-blue-500" />
                   <span className="text-white font-medium">追蹤水球軟體學院 FB 粉專</span>
                 </div>
               </div>
@@ -121,7 +120,6 @@ const FormStep3 = ({ formData, setFormData, errors }: FormStep3Props) => {
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
-                  <MessageCircle className="w-5 h-5 text-purple-500" />
                   <span className="text-white font-medium">追蹤水球軟體學院 Threads</span>
                 </div>
               </div>
@@ -169,7 +167,6 @@ const FormStep3 = ({ formData, setFormData, errors }: FormStep3Props) => {
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Users className="w-5 h-5 text-blue-600" />
                   <span className="text-white font-medium">加入水球軟體學院 FB 社團</span>
                 </div>
               </div>
@@ -226,7 +223,6 @@ const FormStep3 = ({ formData, setFormData, errors }: FormStep3Props) => {
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
-                  <MessageCircle className="w-5 h-5 text-green-500" />
                   <span className="text-white font-medium">加入水球軟體學院 LINE 官方帳號</span>
                 </div>
               </div>
@@ -283,7 +279,6 @@ const FormStep3 = ({ formData, setFormData, errors }: FormStep3Props) => {
                   )}
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Users className="w-5 h-5 text-purple-500" />
                   <span className="text-white font-medium">確認已加入 Discord 社群</span>
                 </div>
               </div>
