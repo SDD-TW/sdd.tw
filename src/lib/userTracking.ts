@@ -45,6 +45,15 @@ export function getOrCreateSessionId(): string {
     console.log('[Tracking] Generated new session ID:', sessionId);
     return sessionId;
   } catch (error) {
+    if (error instanceof DOMException) {
+      if (error.code === 22 || error.code === 1014) {
+        // QuotaExceededError
+        console.warn('[Tracking] localStorage quota exceeded');
+      } else if (error.code === 18) {
+        // SecurityError (可能被禁用)
+        console.warn('[Tracking] localStorage is disabled');
+      }
+    }
     console.error('[Tracking] Failed to get/create session ID:', error);
     // 如果 localStorage 失敗，返回臨時 ID（不在 localStorage 中儲存）
     return generateUUID();
@@ -105,15 +114,7 @@ async function syncEventToSupabase(
   formType: FormType = 'onboarding'
 ): Promise<boolean> {
   try {
-    // 檢查環境變數
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseAnonKey) {
-      console.warn('[Tracking] Supabase 環境變數未設定，跳過同步');
-      return false;
-    }
-
+    // 使用已建立的 supabase client（已在 supabase.ts 中處理環境變數檢查）
     const { data, error } = await supabase
       .from('user_log')
       .insert({
@@ -228,7 +229,30 @@ export async function trackEvent(
     }
 
     existingEvents.push(event);
-    localStorage.setItem(key, JSON.stringify(existingEvents));
+    
+    try {
+      localStorage.setItem(key, JSON.stringify(existingEvents));
+    } catch (error) {
+      // localStorage 錯誤處理
+      if (error instanceof DOMException) {
+        if (error.code === 22 || error.code === 1014) {
+          // QuotaExceededError - 清理最舊的事件
+          console.warn('[Tracking] localStorage quota exceeded, clearing oldest events');
+          // 刪除最舊的 100 個事件
+          existingEvents.splice(0, Math.min(100, existingEvents.length));
+          try {
+            localStorage.setItem(key, JSON.stringify(existingEvents));
+          } catch (retryError) {
+            console.error('[Tracking] Failed to save after cleanup:', retryError);
+          }
+        } else if (error.code === 18) {
+          // SecurityError (可能被禁用)
+          console.warn('[Tracking] localStorage is disabled');
+        }
+      } else {
+        console.error('[Tracking] Failed to save event to localStorage:', error);
+      }
+    }
 
     // 2. 同步到 Supabase
     const shouldSyncImmediately = immediate || IMMEDIATE_SYNC_EVENTS.includes(eventType);
