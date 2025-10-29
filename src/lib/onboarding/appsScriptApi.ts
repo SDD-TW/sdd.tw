@@ -7,14 +7,23 @@ import { OnboardingFormData } from '@/types/onboarding';
 const APPS_SCRIPT_API_URL = process.env.GOOGLE_APPS_SCRIPT_URL || '';
 
 /**
- * 提交報名表單到 Google Apps Script API
+ * Google Apps Script API 回應格式
  */
-export async function submitOnboardingForm(formData: OnboardingFormData): Promise<{
+export interface OnboardingFormResponse {
   success: boolean;
   studentId?: string;
   message?: string;
   error?: string;
-}> {
+  data?: {
+    isPaidMember?: boolean;
+    studentId?: string;
+  };
+}
+
+/**
+ * 提交報名表單到 Google Apps Script API
+ */
+export async function submitOnboardingForm(formData: OnboardingFormData): Promise<OnboardingFormResponse> {
   try {
     if (!APPS_SCRIPT_API_URL) {
       throw new Error('GOOGLE_APPS_SCRIPT_URL is not configured');

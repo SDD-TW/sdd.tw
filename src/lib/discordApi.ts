@@ -198,6 +198,15 @@ export interface PaidMemberWelcomeData {
 }
 
 /**
+ * 非課金玩家歡迎通知資料
+ */
+export interface NonPaidMemberWelcomeData {
+  discordId: string;
+  discordName: string;
+  githubUsername: string;
+}
+
+/**
  * 生成課金學員歡迎 Discord 通知訊息
  * 
  * @param data - 課金學員歡迎資料
@@ -254,6 +263,89 @@ export async function sendPaidMemberWelcomeNotification(
     }
   } catch (error: any) {
     console.error('❌ 課金學員歡迎通知發送異常:', error.message);
+    // 不拋出錯誤，返回 false，讓報名流程繼續
+    return false;
+  }
+}
+
+/**
+ * 生成非課金玩家歡迎 Discord 通知訊息
+ * 
+ * @param data - 非課金玩家歡迎資料
+ * @returns Discord 訊息內容
+ */
+function generateNonPaidMemberWelcomeMessage(data: NonPaidMemberWelcomeData): string {
+  const message = `<@${data.discordId}>
+
+已收到你的報名，入會任務開始，請完成以下步驟才能成為正式成員：
+
+1️⃣ 請立即前往 入會任務連結 ，完成任務0–任務4
+2️⃣ 完成任務0–任務4後，請提交 入會任務審核表單
+3️⃣ 提交表單後，請在此頻道送出通知：「我已提交入會任務，請協助審核」
+
+---
+
+👉 提醒你：
+
+若你已購買「AIxBDD規格驅動全自動開發術」，那麼你已成為課金玩家，沒有時間限制。
+若你是無課玩家，請務必在 30 天內 完成任務，否則將會失去資格。
+
+---
+
+若有任何問題，歡迎隨時在此處提出討論 💬
+
+📎 參考連結：
+🔗 入會任務 | Notion
+https://waterballs.tw/5w1b1`;
+
+  return message;
+}
+
+/**
+ * 發送非課金玩家歡迎通知到 Discord
+ * 
+ * @param data - 非課金玩家歡迎資料
+ * @returns 是否發送成功
+ */
+export async function sendNonPaidMemberWelcomeNotification(
+  data: NonPaidMemberWelcomeData
+): Promise<boolean> {
+  const channelId = process.env.DISCORD_CHANNEL_ID;
+
+  if (!channelId) {
+    console.error('❌ DISCORD_CHANNEL_ID is not defined in environment variables');
+    return false;
+  }
+
+  console.log('📢 開始發送非課金玩家歡迎通知:', {
+    discordId: data.discordId,
+    discordName: data.discordName,
+    channelId,
+  });
+
+  try {
+    // 生成訊息內容
+    const message = generateNonPaidMemberWelcomeMessage(data);
+
+    // 發送訊息
+    const response = await sendDiscordMessage(channelId, message);
+
+    // 檢查回應
+    if ('id' in response) {
+      console.log('✅ 非課金玩家歡迎通知發送成功:', {
+        messageId: response.id,
+        channelId: response.channel_id,
+      });
+      return true;
+    } else {
+      console.error('❌ 非課金玩家歡迎通知發送失敗:', {
+        error: response.message,
+        code: response.code,
+      });
+      return false;
+    }
+  } catch (error: any) {
+    console.error('❌ 非課金玩家歡迎通知發送異常:', error.message);
     // 不拋出錯誤，返回 false，讓報名流程繼續
     return false;
   }

@@ -3,7 +3,7 @@ import { OnboardingFormData } from '@/types/onboarding';
 import { submitOnboardingForm } from '@/lib/onboarding/appsScriptApi';
 import { createChargeMemberJoinedEvent } from '@/lib/eventApi';
 import { sendGitHubCollaborationInvite } from '@/lib/githubApi';
-import { sendPaidMemberWelcomeNotification } from '@/lib/discordApi';
+import { sendPaidMemberWelcomeNotification, sendNonPaidMemberWelcomeNotification } from '@/lib/discordApi';
 
 /**
  * 提交報名表單
@@ -18,8 +18,8 @@ export async function POST(request: NextRequest) {
     if (!formData.email || !formData.nickname || !formData.discordId || !formData.githubUsername) {
       return NextResponse.json(
         {
-          success: false,
-          error: '請填寫所有必填欄位',
+            success: false,
+            error: '請填寫所有必填欄位',
         },
         { status: 400 }
       );
@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
     if (!formData.confirmation) {
       return NextResponse.json(
         {
-          success: false,
-          error: '請勾選確認框',
+            success: false,
+            error: '請勾選確認框',
         },
         { status: 400 }
       );
@@ -110,6 +110,25 @@ export async function POST(request: NextRequest) {
         }
       } catch (error) {
         console.error('❌ Discord 歡迎通知發送異常:', error);
+      }
+    } else {
+      // 非課金玩家發送 Discord 通知
+      console.log('🎯 非課金玩家加入，發送新手任務通知...');
+      
+      try {
+        const discordSuccess = await sendNonPaidMemberWelcomeNotification({
+          discordId: formData.discordId,
+          discordName: formData.nickname,
+          githubUsername: formData.githubUsername,
+        });
+
+        if (discordSuccess) {
+          console.log('✅ 非課金玩家 Discord 通知發送成功');
+        } else {
+          console.warn('⚠️ 非課金玩家 Discord 通知發送失敗');
+        }
+      } catch (error) {
+        console.error('❌ 非課金玩家 Discord 通知發送異常:', error);
       }
     }
 
