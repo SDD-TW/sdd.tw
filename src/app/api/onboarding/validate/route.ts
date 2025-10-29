@@ -115,7 +115,7 @@ function validateDiscordId(discordId: string) {
 
 /**
  * GitHub Username 驗證
- * 調用 GitHub REST API 確認用戶存在
+ * 調用 GitHub REST API 確認用戶存在，並檢查 CRM 中是否已被使用
  */
 async function validateGithubUsername(username: string) {
   try {
@@ -139,6 +139,20 @@ async function validateGithubUsername(username: string) {
 
     if (response.status === 200) {
       const data = await response.json();
+      
+      // 檢查 CRM_V2 中是否已存在此 GitHub username
+      const crmData = await getCrmData();
+      const existingRecord = crmData.find(
+        (record) => record['GIthub user name']?.trim().toLowerCase() === username.trim().toLowerCase()
+      );
+
+      if (existingRecord) {
+        return NextResponse.json({
+          valid: false,
+          error: '此 GitHub Username 已經使用過，一個帳號只允許一個 GitHub Username，請確認或聯繫管家人員。',
+        });
+      }
+
       return NextResponse.json({
         valid: true,
         data: {
