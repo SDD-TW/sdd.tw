@@ -188,6 +188,78 @@ export async function sendTeamCreatedNotification(
 }
 
 /**
+ * 課金學員歡迎通知資料
+ */
+export interface PaidMemberWelcomeData {
+  discordId: string;
+  discordName: string;
+  studentId: string;
+  githubUsername: string;
+}
+
+/**
+ * 生成課金學員歡迎 Discord 通知訊息
+ * 
+ * @param data - 課金學員歡迎資料
+ * @returns Discord 訊息內容
+ */
+function generatePaidMemberWelcomeMessage(data: PaidMemberWelcomeData): string {
+  const message = `HI， <@${data.discordId}> 🏆 ${data.studentId} 歡迎加入臺灣驅動開發研究組織，再幫我們注意一下信箱，已經發送我們開源 Repo 的邀請信！`;
+
+  return message;
+}
+
+/**
+ * 發送課金學員歡迎通知到 Discord
+ * 
+ * @param data - 課金學員歡迎資料
+ * @returns 是否發送成功
+ */
+export async function sendPaidMemberWelcomeNotification(
+  data: PaidMemberWelcomeData
+): Promise<boolean> {
+  const channelId = process.env.DISCORD_CHANNEL_ID;
+
+  if (!channelId) {
+    console.error('❌ DISCORD_CHANNEL_ID is not defined in environment variables');
+    return false;
+  }
+
+  console.log('📢 開始發送課金學員歡迎通知:', {
+    discordId: data.discordId,
+    studentId: data.studentId,
+    channelId,
+  });
+
+  try {
+    // 生成訊息內容
+    const message = generatePaidMemberWelcomeMessage(data);
+
+    // 發送訊息
+    const response = await sendDiscordMessage(channelId, message);
+
+    // 檢查回應
+    if ('id' in response) {
+      console.log('✅ 課金學員歡迎通知發送成功:', {
+        messageId: response.id,
+        channelId: response.channel_id,
+      });
+      return true;
+    } else {
+      console.error('❌ 課金學員歡迎通知發送失敗:', {
+        error: response.message,
+        code: response.code,
+      });
+      return false;
+    }
+  } catch (error: any) {
+    console.error('❌ 課金學員歡迎通知發送異常:', error.message);
+    // 不拋出錯誤，返回 false，讓報名流程繼續
+    return false;
+  }
+}
+
+/**
  * 測試 Discord 連線（可選，用於調試）
  * 
  * @returns 是否連線成功
@@ -216,6 +288,3 @@ export async function testDiscordConnection(): Promise<boolean> {
     return false;
   }
 }
-
-
-
