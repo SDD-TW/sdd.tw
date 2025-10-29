@@ -3,7 +3,12 @@ import { OnboardingFormData } from '@/types/onboarding';
 import { submitOnboardingForm } from '@/lib/onboarding/appsScriptApi';
 import { createChargeMemberJoinedEvent } from '@/lib/eventApi';
 import { sendGitHubCollaborationInvite } from '@/lib/githubApi';
-import { sendPaidMemberWelcomeNotification, sendNonPaidMemberWelcomeNotification } from '@/lib/discordApi';
+import { 
+  sendPaidMemberWelcomeNotification, 
+  sendNonPaidMemberWelcomeNotification,
+  assignDiscordRole,
+  DISCORD_ROLES
+} from '@/lib/discordApi';
 
 /**
  * 提交報名表單
@@ -94,7 +99,23 @@ export async function POST(request: NextRequest) {
         console.error('❌ GitHub 協作邀請發送異常:', error);
       }
 
-      // 3. 發送 Discord 歡迎通知
+      // 3. 分配身份組（在發送通知前）
+      try {
+        const roleAssigned = await assignDiscordRole(
+          formData.discordId,
+          DISCORD_ROLES.PAID_MEMBER
+        );
+
+        if (roleAssigned) {
+          console.log('✅ 課金玩家身份組分配成功');
+        } else {
+          console.warn('⚠️ 課金玩家身份組分配失敗');
+        }
+      } catch (error) {
+        console.error('❌ 課金玩家身份組分配異常:', error);
+      }
+
+      // 4. 發送 Discord 歡迎通知（分配身份組後才能收到 @mention）
       try {
         const discordSuccess = await sendPaidMemberWelcomeNotification({
           discordId: formData.discordId,
@@ -112,9 +133,26 @@ export async function POST(request: NextRequest) {
         console.error('❌ Discord 歡迎通知發送異常:', error);
       }
     } else {
-      // 非課金玩家發送 Discord 通知
-      console.log('🎯 非課金玩家加入，發送新手任務通知...');
+      // 非課金玩家流程
+      console.log('🎯 非課金玩家加入，開始執行流程...');
       
+      // 1. 分配身份組（在發送通知前）
+      try {
+        const roleAssigned = await assignDiscordRole(
+          formData.discordId,
+          DISCORD_ROLES.NON_PAID_MEMBER
+        );
+
+        if (roleAssigned) {
+          console.log('✅ 非課金玩家身份組分配成功');
+        } else {
+          console.warn('⚠️ 非課金玩家身份組分配失敗');
+        }
+      } catch (error) {
+        console.error('❌ 非課金玩家身份組分配異常:', error);
+      }
+
+      // 2. 發送 Discord 通知（分配身份組後才能收到 @mention）
       try {
         const discordSuccess = await sendNonPaidMemberWelcomeNotification({
           discordId: formData.discordId,

@@ -207,6 +207,81 @@ export interface NonPaidMemberWelcomeData {
 }
 
 /**
+ * Discord 伺服器和身份組 ID 定義
+ */
+export const DISCORD_GUILD_ID = '1295275227848249364'; // SDD 伺服器 ID
+
+export const DISCORD_ROLES = {
+  PAID_MEMBER: '1389130161416437880',    // 課金玩家身份組
+  NON_PAID_MEMBER: '1387342788009525298', // 非課金玩家身份組
+} as const;
+
+/**
+ * 分配 Discord 身份組
+ * 
+ * @param userId - Discord 用戶 ID
+ * @param roleId - 身份組 ID
+ * @returns 是否分配成功
+ */
+export async function assignDiscordRole(
+  userId: string,
+  roleId: string
+): Promise<boolean> {
+  const botToken = process.env.DISCORD_BOT_TOKEN;
+  const guildId = DISCORD_GUILD_ID; // 使用固定的伺服器 ID
+
+  if (!botToken) {
+    console.error('❌ DISCORD_BOT_TOKEN is not defined in environment variables');
+    return false;
+  }
+
+  console.log('🎭 開始分配 Discord 身份組:', {
+    userId,
+    roleId,
+    guildId,
+  });
+
+  try {
+    const response = await fetch(
+      `https://discord.com/api/v10/guilds/${guildId}/members/${userId}/roles/${roleId}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bot ${botToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (response.ok || response.status === 204) {
+      console.log('✅ Discord 身份組分配成功:', {
+        userId,
+        roleId,
+        status: response.status,
+      });
+      return true;
+    } else {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('❌ Discord 身份組分配失敗:', {
+        userId,
+        roleId,
+        status: response.status,
+        error: errorData,
+      });
+      return false;
+    }
+  } catch (error: any) {
+    console.error('❌ Discord 身份組分配異常:', {
+      userId,
+      roleId,
+      error: error.message,
+    });
+    // 不拋出錯誤，返回 false，讓流程繼續
+    return false;
+  }
+}
+
+/**
  * 生成課金學員歡迎 Discord 通知訊息
  * 
  * @param data - 課金學員歡迎資料
