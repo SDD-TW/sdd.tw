@@ -11,6 +11,7 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@octokit/rest": "^22.0.0",
+    "@supabase/supabase-js": "^2.77.0",
     "framer-motion": "^12.23.18",
     "googleapis": "^162.0.0",
     "lottie-react": "^2.4.1",

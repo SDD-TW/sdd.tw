@@ -9,6 +9,7 @@ import {
   assignDiscordRole,
   DISCORD_ROLES
 } from '@/lib/discordApi';
+import { createUserSession } from '@/lib/userTracking';
 
 /**
  * 提交報名表單
@@ -17,7 +18,8 @@ import {
  */
 export async function POST(request: NextRequest) {
   try {
-    const formData: OnboardingFormData = await request.json();
+    const body = await request.json();
+    const { sessionId, ...formData }: OnboardingFormData & { sessionId?: string } = body;
 
     // 基本驗證
     if (!formData.email || !formData.nickname || !formData.discordId || !formData.githubUsername) {
@@ -170,7 +172,28 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // TODO: 寫入 Supabase 追蹤日誌（Phase 2）
+    // 建立 user_session 記錄（綁定 session_id 與學員身份）
+    if (sessionId) {
+      try {
+        const sessionCreated = await createUserSession(
+          sessionId,
+          formData.githubUsername,
+          formData.discordId,
+          formData.nickname,
+          formData.email,
+          'onboarding'
+        );
+
+        if (sessionCreated) {
+          console.log('✅ User session 記錄建立成功');
+        } else {
+          console.warn('⚠️ User session 記錄建立失敗');
+        }
+      } catch (error) {
+        console.error('❌ User session 記錄建立異常:', error);
+        // 不影響表單提交流程，靜默失敗
+      }
+    }
 
     return NextResponse.json({
       success: true,
