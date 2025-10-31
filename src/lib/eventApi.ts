@@ -14,7 +14,7 @@
  */
 interface EventApiBaseRequest {
   token: string;
-  code: 'TEAM_CREATED' | 'TEAM_MEMBER_JOINED';
+  code: 'TEAM_CREATED' | 'TEAM_MEMBER_JOINED' | 'CHARGE_MEMBER_JOINED';
   github_id: string;
   team_id: string;
   dc_id: string;
@@ -37,6 +37,14 @@ export interface TeamCreatedEventRequest extends EventApiBaseRequest {
 export interface TeamMemberJoinedEventRequest extends EventApiBaseRequest {
   code: 'TEAM_MEMBER_JOINED';
   note?: string; // 備註（選填）
+}
+
+/**
+ * CHARGE_MEMBER_JOINED 事件請求參數
+ */
+export interface ChargeMemberJoinedEventRequest extends EventApiBaseRequest {
+  code: 'CHARGE_MEMBER_JOINED';
+  note?: string; // 學號（選填）
 }
 
 /**
@@ -83,7 +91,7 @@ export interface TeamMemberData {
  * @returns Event API 回應
  */
 async function callEventApi(
-  eventData: TeamCreatedEventRequest | TeamMemberJoinedEventRequest
+  eventData: TeamCreatedEventRequest | TeamMemberJoinedEventRequest | ChargeMemberJoinedEventRequest
 ): Promise<EventApiResponse> {
   const apiUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
   const apiToken = process.env.EVENT_API_TOKEN;
@@ -268,6 +276,67 @@ export async function createTeamMemberJoinedEvent(
       memberGithubId: member.githubId,
     });
     // 不拋出錯誤，返回 null，讓組隊流程繼續
+    return null;
+  }
+}
+
+/**
+ * 創建 CHARGE_MEMBER_JOINED 事件
+ * 
+ * @param memberData - 課金玩家資料
+ * @param studentId - 學號（選填）
+ * @returns Event API 回應，或 null（失敗但不中斷流程）
+ */
+export async function createChargeMemberJoinedEvent(
+  memberData: {
+    githubId: string;
+    discordId: string;
+    discordName: string;
+    email: string;
+  },
+  studentId?: string
+): Promise<EventApiResponse | null> {
+  console.log('📝 開始寫入 CHARGE_MEMBER_JOINED 事件:', {
+    githubId: memberData.githubId,
+    studentId: studentId || '無學號',
+  });
+
+  try {
+    const eventData: ChargeMemberJoinedEventRequest = {
+      code: 'CHARGE_MEMBER_JOINED',
+      github_id: memberData.githubId,
+      team_id: '', // 個人事件，沒有 Team ID
+      dc_id: memberData.discordId,
+      dc_name: memberData.discordName,
+      email: memberData.email,
+      note: studentId ? `課金玩家加入-${studentId}` : '課金玩家加入', // 格式：課金玩家加入-學號
+      token: '', // 將在 callEventApi 中填入
+    };
+
+    const response = await callEventApi(eventData);
+
+    if (response.success) {
+      console.log('✅ CHARGE_MEMBER_JOINED 事件寫入成功:', {
+        eventId: response.event_id,
+        time: response.time,
+        githubId: memberData.githubId,
+        studentId: studentId || '無學號',
+      });
+    } else {
+      console.error('❌ CHARGE_MEMBER_JOINED 事件寫入失敗:', {
+        error: response.error,
+        message: response.message,
+        githubId: memberData.githubId,
+      });
+    }
+
+    return response;
+  } catch (error: any) {
+    console.error('❌ CHARGE_MEMBER_JOINED 事件寫入異常:', {
+      error: error.message,
+      githubId: memberData.githubId,
+    });
+    // 不拋出錯誤，返回 null，讓報名流程繼續
     return null;
   }
 }
